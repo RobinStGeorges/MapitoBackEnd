@@ -8,6 +8,9 @@ public class Position {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    public String getPosString(){
+        return getLatitude()+"-"+getLongitude() ;
+    }
 
     public double getLatitude() {
         return latitude;

@@ -11,6 +11,7 @@ public class Utilisateur {
     private ArrayList<Utilisateur> friend;
     private Position pos;
 
+    //id generé automatiquement par le document?
     public Utilisateur(int id, String mail, String password, String phoneId ,ArrayList<Utilisateur> friend,Position pos){
         this.id=id;
         this.mail=mail;

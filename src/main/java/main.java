@@ -13,21 +13,15 @@ public class main {
     public static void main(String args[]){
         ArrayList listUtil =new ArrayList();
         Position pos = new Position(2,3);
-        Utilisateur user = new Utilisateur(1,"premier.test@gmail.com","password","0670252682", listUtil,pos);
-        DBCollection dbCollection = new ConnectionMDB().getConnection("utilisateurs");
-        BasicDBObject dbo= new BasicDBObject();
-        String mail = user.getMail();
-        dbo.put("id",user.getId());
-        dbo.put("mail",user.getMail());
-        dbo.put("password",user.getPassword());
-        dbo.put("phoneId",user.getPhoneId());
-        dbo.put("friends",user.getFriend());
-        //dbo.put("pos",user.getPos());
-        dbCollection.insert(dbo);
+        Utilisateur user = new Utilisateur(1,"second.test@gmail.com","password","0670252682", listUtil,pos);
 
-        //AJOUT
+        ConnectionMDB connectionMDB= new ConnectionMDB();
 
 
-        //RECUPERATION
+        //AJOUT USER
+        connectionMDB.saveUser(user);
+
+        //RECUPERATION USER
+        connectionMDB.getUser("mail","second.test@gmail.com");
     }
 }

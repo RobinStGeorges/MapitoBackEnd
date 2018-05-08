@@ -7,17 +7,32 @@ public class Utilisateur {
     private int id;
     private String mail;
     private String password;
-    private Map<String,String> phoneId;
+    //private Map<String,String> phoneId;
     private ArrayList<Utilisateur> friend;
     private Position pos;
+    private String phoneId;
 
+    //id generé automatiquement par le document?
     public Utilisateur(int id, String mail, String password, String phoneId ,ArrayList<Utilisateur> friend,Position pos){
         this.id=id;
         this.mail=mail;
         this.password=password;
-        this.phoneId.put(phoneId,"false");
+        //this.phoneId.put(phoneId,"false");
+        this.phoneId=phoneId;
         this.friend=friend;
         this.pos=pos;
+    }
+
+   // public void setPhoneId(Map<String, String> phoneId) {
+     //   this.phoneId = phoneId;
+    //}
+
+    public Position getPos() {
+        return pos;
+    }
+
+    public void setPos(Position pos) {
+        this.pos = pos;
     }
 
     public int getId() {
@@ -44,13 +59,13 @@ public class Utilisateur {
         this.password = password;
     }
 
-    public Map<String,String> getPhoneId() {
-        return phoneId;
-    }
+    //public Map<String,String> getPhoneId() {
+ //       return phoneId;
+   // }
 
-    public void setPhoneId(String phoneId) {
-        this.phoneId.put(phoneId,"false");
-    }
+    //public void setPhoneId(String phoneId) {
+    //    this.phoneId.put(phoneId,"false");
+ //   }
 
     public ArrayList<Utilisateur> getFriend() {
         return friend;
@@ -64,4 +79,11 @@ public class Utilisateur {
         this.friend.add(friend);
     }
 
+    public String getPhoneId() {
+        return phoneId;
+    }
+
+    public void setPhoneId(String phoneId) {
+        this.phoneId = phoneId;
+    }
 }

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ConnectionMDB {
 
-    MongoClient mongo;
-    DBCollection dbCollection;
+    private MongoClient mongo;
+    private DBCollection dbCollection;
     public ConnectionMDB(){
         try {
             this.mongo = new MongoClient( "localhost" , 27017 );
@@ -61,8 +61,7 @@ public class ConnectionMDB {
         String[] split = posString.split("-");
         Position pos = new Position(Float.parseFloat(split[0]),Float.parseFloat(split[1]));
 
-        Utilisateur user = new Utilisateur(id,mail,password,phoneId,friends,pos);
-        return user;
+        return new Utilisateur(id,mail,password,phoneId,friends,pos);
 
     }
 

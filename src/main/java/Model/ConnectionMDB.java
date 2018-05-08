@@ -1,5 +1,7 @@
 package Model;
 
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
 import java.net.UnknownHostException;
@@ -15,8 +17,10 @@ public class ConnectionMDB {
         }
     }
 
-    public MongoClient getConnection(){
-        return this.mongo;
+    public DBCollection getConnection(String collection){
+        DB db = mongo.getDB("mapito");
+        DBCollection dbCollection = db.getCollection("collection");
+        return dbCollection;
     }
 
 }

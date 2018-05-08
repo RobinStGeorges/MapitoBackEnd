@@ -51,6 +51,7 @@ public class ConnectionMDB {
         DBCursor dbCursor = dbCollection.find(dbo);
         myList = dbCursor.toArray();
 
+
         int id = (Integer)myList.get(0).get("id");
         String mail =(String)myList.get(0).get("mail");
         String password =(String)myList.get(0).get("password");

@@ -22,6 +22,7 @@ public class main {
         connectionMDB.saveUser(user);
 
         //RECUPERATION USER
-        connectionMDB.getUser("mail","second.test@gmail.com");
+        Utilisateur userRecup = connectionMDB.getUser("mail","second.test@gmail.com");
+        //System.out.println(userRecup.getPhoneId());
     }
 }

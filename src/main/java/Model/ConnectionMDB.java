@@ -3,6 +3,8 @@ package Model;
 import com.mongodb.*;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectionMDB {
 
@@ -40,14 +42,27 @@ public class ConnectionMDB {
         dbCollection.insert(dbo);
     }
 
-    public void getUser(String fieldName,String value){
+    public Utilisateur getUser(String fieldName,String value){
         dbCollection = new ConnectionMDB().getConnectionUtilisateurs("utilisateurs");
         BasicDBObject dbo= new BasicDBObject();
+        List<DBObject> myList = null;
+
         dbo.put(fieldName,value);
         DBCursor dbCursor = dbCollection.find(dbo);
-        while(dbCursor.hasNext()){
-            System.out.println(dbCursor.next());
-        }
+        myList = dbCursor.toArray();
+
+        int id = (Integer)myList.get(0).get("id");
+        String mail =(String)myList.get(0).get("mail");
+        String password =(String)myList.get(0).get("password");
+        String phoneId =(String)myList.get(0).get("phoneId");
+        ArrayList friends =(ArrayList) myList.get(0).get("friends");
+        String posString =(String)myList.get(0).get("pos");
+        String[] split = posString.split("-");
+        Position pos = new Position(Float.parseFloat(split[0]),Float.parseFloat(split[1]));
+
+        Utilisateur user = new Utilisateur(id,mail,password,phoneId,friends,pos);
+        return user;
+
     }
 
 }

@@ -1,10 +1,13 @@
 package Model;
 
 import com.mongodb.*;
+import com.mongodb.util.JSON;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class ConnectionMDB {
 
@@ -61,8 +64,12 @@ public class ConnectionMDB {
         String[] split = posString.split("-");
         Position pos = new Position(Float.parseFloat(split[0]),Float.parseFloat(split[1]));
 
-        return new Utilisateur(id,mail,password,phoneId,friends,pos);
+      Utilisateur user =new Utilisateur(id,mail,password,phoneId,friends,pos);
 
+
+        JSON json = new JSON();
     }
+
+
 
 }

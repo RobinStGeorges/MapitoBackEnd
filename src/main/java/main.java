@@ -16,16 +16,16 @@ public class main {
 //test
 
         //AJOUT USER
-        //connectionMDB.saveUser(user);
+        connectionMDB.saveUser(user);
 
         //RECUPERATION USER
-        //Utilisateur userRecup = connectionMDB.getUser("mail","second.test@gmail.com");
-        //System.out.println(userRecup.getPhoneId());
+        Utilisateur userRecup = connectionMDB.getUser("mail","second.test@gmail.com");
+        System.out.println(userRecup.getPhoneId());
 
         //UPDATE USER
         DBCollection dbCollection = connectionMDB.getConnectionUtilisateurs("utilisateurs");
         BasicDBObject oldUser= new BasicDBObject();
-        oldUser.put("mail","premier.test@gmail.com");
+        oldUser.put("mail","second.test@gmail.com");
         DBObject oOldUser = dbCollection.findOne(oldUser);
 
         DBObject oNewUser = new BasicDBObject();

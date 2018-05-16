@@ -16,7 +16,7 @@ public class Utilisateur {
     private String phoneId;
     private ConnectionMDB connectionMDB;
 
-    //id generé automatiquement par le document?   /*TO DO*/ Retirer le phone id ?
+    //id generé automatiquement par le document?   /*TO DO*/ Retirer le phone id ? //renvoyer un id avec la pos
     public Utilisateur(int id, String mail, String password, String phoneId ,ArrayList<Utilisateur> friend,Position pos){
         this.id=id;
         this.mail=mail;

@@ -50,7 +50,7 @@ public class ConnectionMDB {
         dbCollection.insert(dbo);
     }
 
-    public JSONObject getUser(String fieldName,String value) {
+    public Utilisateur getUser(String fieldName,String value) {
         dbCollection = new ConnectionMDB().getConnectionUtilisateurs("utilisateurs");
         BasicDBObject dbo = new BasicDBObject();
         List<DBObject> myList = null;
@@ -70,16 +70,16 @@ public class ConnectionMDB {
         Position pos = new Position(Float.parseFloat(split[0]), Float.parseFloat(split[1]));
 
         Utilisateur user = new Utilisateur(id, mail, password, phoneId, friends, pos);
-
-        JSONObject jsonObj = new JSONObject();
-        jsonObj.put("id",id);
-        jsonObj.put("mail",mail);
-        jsonObj.put("password",password);
-        jsonObj.put("phoneId",phoneId);
-        jsonObj.put("friends",friends);
-        jsonObj.put("pos",pos);
-
-        return jsonObj;
+        return user;
+//        JSONObject jsonObj = new JSONObject();
+//        jsonObj.put("id",id);
+//        jsonObj.put("mail",mail);
+//        jsonObj.put("password",password);
+//        jsonObj.put("phoneId",phoneId);
+//        jsonObj.put("friends",friends);
+//        jsonObj.put("pos",pos);
+//
+//        return jsonObj;
 
     }
 

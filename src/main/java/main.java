@@ -15,12 +15,12 @@ public class main {
         ConnectionMDB connectionMDB= new ConnectionMDB();
 //test
 
-        //AJOUT USER
-        connectionMDB.saveUser(user);
-
-        //RECUPERATION USER
-        Utilisateur userRecup = connectionMDB.getUser("mail","second.test@gmail.com");
-        System.out.println(userRecup.getPhoneId());
+//        //AJOUT USER
+//        connectionMDB.saveUser(user);
+//
+//        //RECUPERATION USER
+//        Utilisateur userRecup = connectionMDB.getUser("mail","second.test@gmail.com");
+//        System.out.println(userRecup.getPhoneId());
 
         //UPDATE USER
         DBCollection dbCollection = connectionMDB.getConnectionUtilisateurs("utilisateurs");

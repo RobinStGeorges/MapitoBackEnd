@@ -2,6 +2,7 @@ package conf;
 
 
 
+import Control.UserController;
 import conf.exception.RuntimeExceptionMapper;
 import conf.filter.GsonProvider;
 import conf.filter.TestEndpoint;
@@ -21,6 +22,7 @@ public class App extends Application {
     public Set<Object> getSingletons() {
         Set<Object> sets = new HashSet<>(1);
         sets.add(new TestEndpoint());
+        sets.add(new UserController());
         return sets;
     }
 

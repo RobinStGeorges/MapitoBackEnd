@@ -2,10 +2,9 @@ package conf;
 
 
 
-import com.dant.exception.RuntimeExceptionMapper;
-import com.dant.filter.GsonProvider;
 import conf.exception.RuntimeExceptionMapper;
 import conf.filter.GsonProvider;
+import conf.filter.TestEndpoint;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

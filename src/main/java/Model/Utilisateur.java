@@ -15,8 +15,10 @@ public class Utilisateur {
     private String phoneId;
     private ConnectionMDB connectionMDB;
 
+
     //id generé automatiquement par le document?
     public Utilisateur(int id, String mail, String password, String phoneId ,ArrayList<Friend> friends,Position pos){
+
         this.id=id;
         this.mail=mail;
         this.password=password;

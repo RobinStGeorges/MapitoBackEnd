@@ -59,9 +59,7 @@ public class UserController {
 
         ConnectionMDB connectionMDB= new ConnectionMDB();
         Utilisateur userRecup = connectionMDB.getUser("mail" , mail);
-        if (userRecup.getPassword().equals(password)){
-            return true;
-        }
+        return userRecup.getPassword().equals(password);
     }
 
     @Path("/newUser")

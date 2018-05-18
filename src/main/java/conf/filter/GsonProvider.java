@@ -1,4 +1,4 @@
-package conf;
+package conf.filter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

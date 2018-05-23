@@ -16,11 +16,7 @@ public class ConnectionMDB {
     private MongoClient mongo;
     private DBCollection dbCollection;
     public ConnectionMDB(){
-        try {
-            this.mongo = new MongoClient( "localhost" , 27017 );
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        this.mongo = new MongoClient( "localhost" , 27017 );
     }
 
     public DBCollection getConnectionUtilisateurs(String collection){

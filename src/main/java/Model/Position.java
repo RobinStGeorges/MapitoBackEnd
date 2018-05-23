@@ -11,6 +11,9 @@ public class Position {
     private ObjectId _id; // always required
     private double latitude;
     private double longitude;
+    public Position() {
+
+    }
 
     public Position(double latitude, double longitude) {
         this.latitude = latitude;

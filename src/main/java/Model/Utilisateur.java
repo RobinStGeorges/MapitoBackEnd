@@ -24,7 +24,9 @@ public class Utilisateur {
     private Position pos;
     private String phoneId;
 
+    public Utilisateur(){
 
+    }
     //id generé automatiquement par le document?
     public Utilisateur(String mail, String password, String phoneId ,ArrayList<Friend> friends,Position pos){
         this.mail=mail;
@@ -34,9 +36,7 @@ public class Utilisateur {
         this.friends=friends;
         this.pos=pos;
     }
-    public Utilisateur(){
 
-    }
 
     public Position getPos() {
         return pos;

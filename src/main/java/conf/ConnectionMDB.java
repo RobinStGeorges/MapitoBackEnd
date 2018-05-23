@@ -37,7 +37,6 @@ public class ConnectionMDB {
         dbCollection = new ConnectionMDB().getConnectionUtilisateurs("utilisateurs");
         BasicDBObject dbo= new BasicDBObject();
 
-        dbo.put("id",user.getId());
         dbo.put("mail",user.getMail());
         dbo.put("password",user.getPassword());
         dbo.put("phoneId",user.getPhoneId());
@@ -66,8 +65,7 @@ public class ConnectionMDB {
         String[] split = posString.split("-");
         Position pos = new Position(Float.parseFloat(split[0]), Float.parseFloat(split[1]));
 
-        Utilisateur user = new Utilisateur(id, mail, password, phoneId, friends, pos);
-        return user;
+        return new Utilisateur(mail, password, phoneId, friends, pos);
 //        JSONObject jsonObj = new JSONObject();
 //        jsonObj.put("id",id);
 //        jsonObj.put("mail",mail);

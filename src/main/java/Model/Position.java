@@ -12,6 +12,19 @@ public class Position {
         return getLatitude()+"-"+getLongitude() ;
     }
 
+    public void refresh(double latitude,double longitude){
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public double getLatitude() {
         return latitude;
     }
@@ -19,10 +32,5 @@ public class Position {
 
     public double getLongitude() {
         return longitude;
-    }
-
-    public void refresh(double latitude,double longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
     }
 }

@@ -31,7 +31,7 @@ public class UserController {
     @GET
     @Produces("text/plain")
     @Path("/get/{mail}")
-    public String getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
+    public Position getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
 
         MorphiaService morphiaService;
         UserDAO userDAO;
@@ -40,9 +40,8 @@ public class UserController {
         userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
         fetchedUser.setPos(new Position(5,5));// pour les tests
-        Gson gson = new Gson();
-        String json = gson.toJson(fetchedUser.getPos());
-        return json;
+        Position pos = fetchedUser.getPos();
+        return pos;
 
     }
 
@@ -105,26 +104,54 @@ public class UserController {
                              @PathParam("nom") String nom ,@PathParam("prenom") String prenom,
                              @PathParam("token")String token) throws UnknownHostException {
 
-         MorphiaService morphiaService= new MorphiaService();
-         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByEmail(mail);
         String segments[] = fetchedUser.getToken().split(":");
         String segments2[] =token.split(":");
         String cleToken= segments[1];
         String cleToken2= segments[1];
         System.out.println(cleToken);
-         if (cleToken2.equals(cleToken)){
-             userDAO.updateByEmail(mail,"password",mdp);
-             userDAO.updateByEmail(mail,"nom",nom);
-             userDAO.updateByEmail(mail,"prenom",prenom);
-             return "completed";
-         }
-         else{
-             throw new RuntimeException("Mon erreur");
-         }
+        if (cleToken2.equals(cleToken)){
+            userDAO.updateByEmail(mail,"password",mdp);
+            userDAO.updateByEmail(mail,"nom",nom);
+            userDAO.updateByEmail(mail,"prenom",prenom);
+            return "completed";
+        }
+        else{
+            throw new RuntimeException("Mon erreur");
+        }
 
 
         /*DANS LE FRONT : si "" -> mettre la valeur a celle deja presente dans le user*/
+    }
+
+    /**
+     * R
+     */
+    @PUT
+    @Path("/updatePos/{mail}/{lon}/{lat}/{token}")
+    @Consumes("text/plain")
+    public String updateUserPos(@PathParam("mail") String mail,@PathParam("lon") double lon,
+                             @PathParam("lat") double lat,@PathParam("token") String token) throws UnknownHostException {
+
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByEmail(mail);
+        String segments[] = fetchedUser.getToken().split(":");
+        String segments2[] =token.split(":");
+        String cleToken= segments[1];
+        String cleToken2= segments[1];
+        System.out.println(cleToken);
+        if (cleToken2.equals(cleToken)){
+            Position position = new Position(lat,lon);
+            userDAO.updatePosByEmail(mail,position);
+
+            return "completed";
+        }
+        else{
+            throw new RuntimeException("Mon erreur");
+        }
     }
 
     @GET
@@ -132,6 +159,7 @@ public class UserController {
     public ArrayList<Position> getFriendsDistance(@PathParam("mail") String mail) throws UnknownHostException {
         ArrayList<Position> listePosition = new ArrayList<>();
         MorphiaService morphiaService= new MorphiaService();
+
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByEmail(mail);
 

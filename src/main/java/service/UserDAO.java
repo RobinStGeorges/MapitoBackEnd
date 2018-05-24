@@ -2,6 +2,7 @@ package service;
 
 import java.util.List;
 
+import Model.Position;
 import Model.Utilisateur;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.dao.DAO;
@@ -39,5 +40,5 @@ public interface UserDAO extends DAO<Utilisateur, ObjectId>{
     public void updateByEmail(String mail, String field, String value);
 
 
-
+    public void updatePosByEmail(String mail, Position position);
 }

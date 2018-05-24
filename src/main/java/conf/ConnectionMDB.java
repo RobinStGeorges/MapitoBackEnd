@@ -30,7 +30,7 @@ public class ConnectionMDB {
      * @param user
      */
     public void saveUser (Utilisateur user){
-        dbCollection = new ConnectionMDB().getConnectionUtilisateurs("utilisateurs");
+        dbCollection = new ConnectionMDB().getConnectionUtilisateurs("Utilisateurs");
         BasicDBObject dbo= new BasicDBObject();
 
         dbo.put("mail",user.getMail());
@@ -43,7 +43,7 @@ public class ConnectionMDB {
     }
 
     public Utilisateur getUser(String fieldName,String value) {
-        dbCollection = new ConnectionMDB().getConnectionUtilisateurs("utilisateurs");
+        dbCollection = new ConnectionMDB().getConnectionUtilisateurs("Utilisateurs");
         BasicDBObject dbo = new BasicDBObject();
         List<DBObject> myList = null;
 

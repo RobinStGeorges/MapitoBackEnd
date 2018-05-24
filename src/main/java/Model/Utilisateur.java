@@ -1,6 +1,7 @@
 package Model;
 
 import conf.ConnectionMDB;
+import io.jsonwebtoken.Jwt;
 import org.mongodb.morphia.annotations.*;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
@@ -16,6 +17,8 @@ public class Utilisateur {
 
     @Indexed
     private String mail;
+
+    private String token;
 
     private String password;
     //private Map<String,String> phoneId;

@@ -36,6 +36,8 @@ public interface UserDAO extends DAO<Utilisateur, ObjectId>{
      */
     public Utilisateur getByEmail(String mail);
 
+    public void updateByEmail(String mail, String field, String value);
+
 
 
 }

@@ -1,10 +1,6 @@
 package Model;
-
-import conf.ConnectionMDB;
-import io.jsonwebtoken.Jwt;
 import org.mongodb.morphia.annotations.*;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.*;
 import java.util.ArrayList;
 @Entity("Utilisateur")
 @Indexes(
@@ -17,12 +13,10 @@ public class Utilisateur {
 
     @Indexed
     private String mail;
-
     private String token;
-
+    private int cptWrongtoken;
     private String password;
-    //private Map<String,String> phoneId;
-//    private ArrayList<Utilisateur> friends;
+    @Embedded
     private ArrayList<Friend> friends;
     private Position pos;
     private String phoneId;
@@ -86,4 +80,12 @@ public class Utilisateur {
     public String getPhoneId() { return phoneId;}
 
     public void setPhoneId(String phoneId) { this.phoneId = phoneId;}
+
+    public String getToken() { return token;}
+
+    public void setToken(String token) { this.token = token;}
+
+    public int getCptWrongtoken() {return cptWrongtoken;}
+
+    public void setCptWrongtoken(int cptWrongtoken) {this.cptWrongtoken = cptWrongtoken;}
 }

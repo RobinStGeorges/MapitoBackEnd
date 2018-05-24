@@ -1,16 +1,28 @@
 package Control;
 
+import Model.TokenTournament;
+import com.google.gson.Gson;
+import com.mongodb.util.JSON;
 import com.sun.org.apache.bcel.internal.classfile.Constant;
-import conf.ConnectionMDB;
+//import conf.ConnectionMDB;
 import Model.Position;
 import Model.Utilisateur;
 import com.mongodb.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
+import service.MorphiaService;
+import service.UserDAO;
+import service.UserDaoImpl;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.Key;
 import java.util.ArrayList;
 
@@ -21,6 +33,26 @@ import java.util.ArrayList;
 public class UserController {
 
 
+    //RESTEASY003065: Cannot consume content type !!!!!!
+    @GET
+//    @Path("/get/{mail}/{token}")
+    @Produces("text/plain")
+    @Path("/get/{mail}")
+    public String getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
+
+        MorphiaService morphiaService;
+        UserDAO userDAO;
+
+        morphiaService = new MorphiaService();
+        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
+        fetchedUser.setPos(new Position(5,5));// pour les tests
+        Gson gson = new Gson();
+        String json = gson.toJson(fetchedUser.getPos());
+        return json;
+
+    }
+
     @GET
     @Path("/test")
     @Produces("text/plain")
@@ -28,79 +60,66 @@ public class UserController {
         return "Hello world";
     }
 
-    @POST
-    @Path("/authenticate")
-    public String connectionUser(String mail, String password){
-
-
-
-//        try {
-//            Boolean valid = false;
-//            ConnectionMDB connectionMDB= new ConnectionMDB();
-//            Utilisateur userRecup = connectionMDB.getUser("mail" , mail);
-//            if( userRecup.getPassword().equals(password)){
-//                valid=true;
-//            }
-//            else valid=false;
-//
-//
-//            // Issue a token for the user
-//            String token = issueToken(mail);
-//
-//            // Return the token on the response
-//            return Response.ok(token).build();
-//
-//        } catch (Exception e) {
-//            return Response.status(Response.Status.FORBIDDEN).build();
-//        }
-        return "hello";
-
-    }
-
-    @POST
-//    @JWTTokenNeeded
-    public void newUser(@PathParam("user") Utilisateur user){
-
-        ConnectionMDB connectionMDB= new ConnectionMDB();
-        connectionMDB.saveUser(user);
-    }
-
-    //RESTEASY003065: Cannot consume content type !!!!!!
     @GET
-    @Consumes(MediaType.TEXT_HTML)
-    @Produces("text/plain")
-//    @JWTTokenNeeded
-    public String getUser(@PathParam("mail")String mail){
-        ConnectionMDB connectionMDB= new ConnectionMDB();
-        Utilisateur userRecup = connectionMDB.getUser("mail",mail);
-        System.out.println(userRecup.getPhoneId());
-        return userRecup.getPhoneId();
+    @Path("/authenticate/{mail}/{mdp}")
+    public String connectionUser(@PathParam("mail") String mail,@PathParam("mdp") String password) throws UnknownHostException {
+
+        MorphiaService morphiaService = new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        Utilisateur userRecup = userDAO.getByEmail(mail);
+        if (userRecup.getPassword().equals(password)) {
+            TokenTournament tekken = new TokenTournament();
+            String token = tekken.generateToken(mail);
+            userDAO.updateByEmail(mail,"token",token);
+            return token;
+        }else{
+            return "error 8012";
+        }
+
     }
+
+
+    @POST
+    @Path("/new/{mail}/{mdp}/{nom}/{prenom}")
+    public void newUser(@PathParam("mail") String mail, @PathParam("mdp") String mdp, @PathParam("nom") String nom,@PathParam("prenom") String prenom ) throws UnknownHostException {
+        MorphiaService morphiaService;
+         UserDAO userDAO;
+
+        morphiaService = new MorphiaService();
+        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur user = new Utilisateur(mail,mdp,nom,prenom);
+        userDAO.save(user);
+    }
+
 
 
     @PUT
-//    @JWTTokenNeeded
-    public void updateUser(@PathParam("mail") String mail){
-        ConnectionMDB connectionMDB= new ConnectionMDB();
-        try {
-            //UPDATE USER
-            DBCollection dbCollection = connectionMDB.getConnectionUtilisateurs("utilisateurs");
-            BasicDBObject oldUser = new BasicDBObject();
-            oldUser.put("mail", mail);
-            DBObject oOldUser = dbCollection.findOne(oldUser);
+    @Path("/update/{mail}/{password}/{nom}/{prenom}/{token}")
+    @Consumes("text/plain")
+    public String updateUser(@PathParam("mail") String mail,@PathParam("password") String mdp,
+                             @PathParam("nom") String nom ,@PathParam("prenom") String prenom,
+                             @PathParam("token")String token) throws UnknownHostException {
 
-            DBObject oNewUser = new BasicDBObject();
+         MorphiaService morphiaService= new MorphiaService();
+         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByEmail(mail);
+        String segments[] = fetchedUser.getToken().split(":");
+        String segments2[] =token.split(":");
+        String cleToken= segments[1];
+        String cleToken2= segments[1];
+        System.out.println(cleToken);
+         if (cleToken2.equals(cleToken)){
+             userDAO.updateByEmail(mail,"password",mdp);
+             userDAO.updateByEmail(mail,"nom",nom);
+             userDAO.updateByEmail(mail,"prenom",prenom);
+             return "completed";
+         }
+         else{
+             return "incorrect token" ;
+         }
 
-            oNewUser.put("id", oOldUser.get("id"));
-            oNewUser.put("mail", "updatedMail@gmail.com");
-            oNewUser.put("password", oOldUser.get("password"));
-            oNewUser.put("phoneId", oOldUser.get("phoneId"));
-            oNewUser.put("friends", oOldUser.get("friends"));
-            oNewUser.put("pos", oOldUser.get("pos"));
 
-            dbCollection.update(oOldUser, oNewUser);
-        }catch(NullPointerException e){
-            System.out.println(e);
-        }
+        /*DANS LE FRONT : si "" -> mettre la valeur a celle deja presente dans le user*/
     }
 }

@@ -38,6 +38,9 @@ public class UserController {
 //    @Path("/get/{mail}/{token}")
     @Produces("text/plain")
     @Path("/get/{mail}")
+    /**
+     * R
+     */
     public String getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
 
         MorphiaService morphiaService;
@@ -56,12 +59,18 @@ public class UserController {
     @GET
     @Path("/test")
     @Produces("text/plain")
+    /**
+     * A
+     */
     public String test(){
         return "Hello world";
     }
 
     @GET
     @Path("/authenticate/{mail}/{mdp}")
+    /**
+     * R
+     */
     public String connectionUser(@PathParam("mail") String mail,@PathParam("mdp") String password) throws UnknownHostException {
 
         MorphiaService morphiaService = new MorphiaService();
@@ -74,7 +83,7 @@ public class UserController {
             userDAO.updateByEmail(mail,"token",token);
             return token;
         }else{
-            return "error 8012";
+            throw new RuntimeException("Mon erreur");
         }
 
     }
@@ -82,6 +91,9 @@ public class UserController {
 
     @POST
     @Path("/new/{mail}/{mdp}/{nom}/{prenom}")
+    /**
+     * R
+     */
     public void newUser(@PathParam("mail") String mail, @PathParam("mdp") String mdp, @PathParam("nom") String nom,@PathParam("prenom") String prenom ) throws UnknownHostException {
         MorphiaService morphiaService;
          UserDAO userDAO;
@@ -97,6 +109,9 @@ public class UserController {
     @PUT
     @Path("/update/{mail}/{password}/{nom}/{prenom}/{token}")
     @Consumes("text/plain")
+    /**
+     * R
+     */
     public String updateUser(@PathParam("mail") String mail,@PathParam("password") String mdp,
                              @PathParam("nom") String nom ,@PathParam("prenom") String prenom,
                              @PathParam("token")String token) throws UnknownHostException {
@@ -116,10 +131,19 @@ public class UserController {
              return "completed";
          }
          else{
-             return "incorrect token" ;
+             throw new RuntimeException("Mon erreur");
          }
 
 
         /*DANS LE FRONT : si "" -> mettre la valeur a celle deja presente dans le user*/
+    }
+
+    @GET
+    @Path("/exception")
+    /**
+     * R
+     */
+    public Response exception() {
+        throw new RuntimeException("Mon erreur");
     }
 }

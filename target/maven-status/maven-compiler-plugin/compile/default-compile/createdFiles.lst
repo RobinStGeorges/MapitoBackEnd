@@ -1,6 +1,15 @@
 conf\ConnectionMDB.class
+conf\exception\RuntimeExceptionMapper.class
 Model\Friend.class
 conf\App.class
-conf\filter\GsonProvider.class
+service\UserDaoImpl.class
+service\UserDAO.class
+service\UserService.class
+Model\Carnet.class
+conf\filter\TestEndpoint.class
+Control\FriendsController.class
 Model\Utilisateur.class
+Control\UserController.class
+conf\filter\GsonProvider.class
+service\MorphiaService.class
 Model\Position.class

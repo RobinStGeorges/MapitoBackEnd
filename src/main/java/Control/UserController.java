@@ -1,12 +1,17 @@
 package Control;
 
+import com.sun.org.apache.bcel.internal.classfile.Constant;
 import conf.ConnectionMDB;
 import Model.Position;
 import Model.Utilisateur;
 import com.mongodb.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.security.Key;
 import java.util.ArrayList;
 
 
@@ -25,29 +30,57 @@ public class UserController {
 
     @POST
     @Path("/authenticate")
-    public boolean connectionUser(String mail, String password){
-        ConnectionMDB connectionMDB= new ConnectionMDB();
-        Utilisateur userRecup = connectionMDB.getUser("mail" , mail);
-        return userRecup.getPassword().equals(password);
+    public String connectionUser(String mail, String password){
+
+
+
+//        try {
+//            Boolean valid = false;
+//            ConnectionMDB connectionMDB= new ConnectionMDB();
+//            Utilisateur userRecup = connectionMDB.getUser("mail" , mail);
+//            if( userRecup.getPassword().equals(password)){
+//                valid=true;
+//            }
+//            else valid=false;
+//
+//
+//            // Issue a token for the user
+//            String token = issueToken(mail);
+//
+//            // Return the token on the response
+//            return Response.ok(token).build();
+//
+//        } catch (Exception e) {
+//            return Response.status(Response.Status.FORBIDDEN).build();
+//        }
+        return "hello";
+
     }
 
     @POST
-    public void newUser(Utilisateur user){
+//    @JWTTokenNeeded
+    public void newUser(@PathParam("user") Utilisateur user){
 
         ConnectionMDB connectionMDB= new ConnectionMDB();
         connectionMDB.saveUser(user);
     }
 
+    //RESTEASY003065: Cannot consume content type !!!!!!
     @GET
-    public void getUser(@QueryParam("email") String mail){
+    @Consumes(MediaType.TEXT_HTML)
+    @Produces("text/plain")
+//    @JWTTokenNeeded
+    public String getUser(@PathParam("mail")String mail){
         ConnectionMDB connectionMDB= new ConnectionMDB();
         Utilisateur userRecup = connectionMDB.getUser("mail",mail);
         System.out.println(userRecup.getPhoneId());
+        return userRecup.getPhoneId();
     }
 
 
     @PUT
-    public void updateUser(String mail){
+//    @JWTTokenNeeded
+    public void updateUser(@PathParam("mail") String mail){
         ConnectionMDB connectionMDB= new ConnectionMDB();
         try {
             //UPDATE USER

@@ -26,7 +26,7 @@ public class UserService {
 
         DBObject oNewUser = new BasicDBObject();
 
-        oNewUser.put("id",user.getId());
+
         oNewUser.put("mail",user.getMail());
         oNewUser.put("password",user.getPassword());
         oNewUser.put("phoneId",user.getPhoneId());

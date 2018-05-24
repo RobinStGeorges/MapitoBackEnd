@@ -1,8 +1,19 @@
 package Model;
 
+
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.*;
+
+@Entity("Position")
+
 public class Position {
+    @Id
+    private ObjectId _id; // always required
     private double latitude;
     private double longitude;
+    public Position() {
+
+    }
 
     public Position(double latitude, double longitude) {
         this.latitude = latitude;

@@ -1,33 +1,45 @@
 package Model;
 
 import conf.ConnectionMDB;
-
+import io.jsonwebtoken.Jwt;
+import org.mongodb.morphia.annotations.*;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.*;
 import java.util.ArrayList;
-
+@Entity("Utilisateur")
+@Indexes(
+        @Index(value = "email", fields = @Field("email"), unique = true)
+)
 public class Utilisateur {
-    private int id;
+
+    @Id
+    private ObjectId _id; // always required
+
+    @Indexed
     private String mail;
+
+    private String token;
+
     private String password;
     //private Map<String,String> phoneId;
 //    private ArrayList<Utilisateur> friends;
     private ArrayList<Friend> friends;
     private Position pos;
     private String phoneId;
-    private ConnectionMDB connectionMDB;
 
+    public Utilisateur(){
 
+    }
     //id generé automatiquement par le document?
-    public Utilisateur(int id, String mail, String password, String phoneId ,ArrayList<Friend> friends,Position pos){
-
-        this.id=id;
+    public Utilisateur(String mail, String password, String phoneId ,ArrayList<Friend> friends,Position pos){
         this.mail=mail;
         this.password=password;
         //this.phoneId.put(phoneId,"false");
         this.phoneId=phoneId;
         this.friends=friends;
         this.pos=pos;
-        this.connectionMDB=new ConnectionMDB();
     }
+
 
     public Position getPos() {
         return pos;
@@ -37,13 +49,7 @@ public class Utilisateur {
         this.pos = pos;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getMail() {
         return mail;

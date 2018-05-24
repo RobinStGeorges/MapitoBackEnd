@@ -1,12 +1,6 @@
 conf\ConnectionMDB.class
-conf\filter\TestEndpoint.class
-Control\FriendsController.class
-conf\exception\RuntimeExceptionMapper.class
 Model\Friend.class
 conf\App.class
-Model\carnet.class
-Model\Utilisateur.class
-service\UserService.class
-Control\UserController.class
 conf\filter\GsonProvider.class
+Model\Utilisateur.class
 Model\Position.class

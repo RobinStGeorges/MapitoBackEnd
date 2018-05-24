@@ -2,6 +2,7 @@ package service;
 
 import java.util.List;
 
+import Model.Position;
 import Model.Utilisateur;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -36,5 +37,13 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
         ds.update(query, ops);
 
+    }
+
+    @Override
+    public void updatePosByEmail(String mail,Position position) {
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
+        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("pos", position);
+
+        ds.update(query, ops);
     }
 }

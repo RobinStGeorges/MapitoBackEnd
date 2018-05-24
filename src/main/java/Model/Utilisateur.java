@@ -1,6 +1,6 @@
 package Model;
 
-import conf.ConnectionMDB;
+//import conf.ConnectionMDB;
 import io.jsonwebtoken.Jwt;
 import org.mongodb.morphia.annotations.*;
 import org.bson.types.ObjectId;
@@ -20,8 +20,6 @@ public class Utilisateur {
 
     private String token;
     private String password;
-    //private Map<String,String> phoneId;
-//    private ArrayList<Utilisateur> friends;
     private ArrayList<Friend> friends;
     private Position pos;
     private String phoneId;
@@ -43,6 +41,21 @@ public class Utilisateur {
     }
 
 
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
 
     public Position getPos() {
         return pos;

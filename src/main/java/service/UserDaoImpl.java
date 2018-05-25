@@ -46,4 +46,12 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
         ds.update(query, ops);
     }
+
+    @Override
+    public Utilisateur getByToken(String token) {
+        Query<Utilisateur> query = createQuery().
+                field("token").equal(token);
+
+        return query.get();
+    }
 }

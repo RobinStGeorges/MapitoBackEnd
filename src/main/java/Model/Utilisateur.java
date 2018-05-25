@@ -7,9 +7,8 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
 import java.util.ArrayList;
 @Entity("Utilisateur")
-@Indexes(
-        @Index(value = "email", fields = @Field("email"), unique = true)
-)
+
+@Indexes(@Index(fields = { @Field("mail") }, options = @IndexOptions(unique = true)))
 public class Utilisateur {
 
     @Id
@@ -26,6 +25,7 @@ public class Utilisateur {
     private int cptWrongtoken;
     private String nom;
     private String prenom;
+    private String[] listeAttente; /*TODO faire les methodes correspondantes */
 
     public Utilisateur(){
 
@@ -117,4 +117,5 @@ public class Utilisateur {
     public String getPhoneId() { return phoneId;}
 
     public void setPhoneId(String phoneId) { this.phoneId = phoneId;}
+
 }

@@ -31,6 +31,14 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
         return query.get();
     }
     @Override
+    public void updateByToken(String token, String field, String value){
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
+        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set(field, value);
+
+        ds.update(query, ops);
+
+    }
+    @Override
     public void updateByEmail(String mail, String field, String value){
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set(field, value);
@@ -54,4 +62,5 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
         return query.get();
     }
+
 }

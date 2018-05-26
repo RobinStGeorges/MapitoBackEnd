@@ -6,14 +6,15 @@ import service.UserDaoImpl;
 
 import java.net.UnknownHostException;
 import java.security.SecureRandom;
+import java.util.UUID;
+
 public class TokenTournament {
 
     protected static SecureRandom random = new SecureRandom();
 
     public synchronized String generateToken( String username ) {
-        long longToken = Math.abs( random.nextLong() );
-        String random = Long.toString( longToken, 16 );
-        return ( username + ":" + random );
+        String suuid = UUID.randomUUID().toString();
+        return suuid;
     }
     public int checkToken(String token,Utilisateur user) {
         if(token == user.getToken())

@@ -25,26 +25,26 @@ public class UserController {
 
 
     //RESTEASY003065: Cannot consume content type !!!!!!
-    /**
-     * R
-     * TODO refaire avec token
-     */
-    @GET
-    @Produces("text/plain")
-    @Path("/get/{mail}")
-    public Position getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
-
-        MorphiaService morphiaService;
-        UserDAO userDAO;
-
-        morphiaService = new MorphiaService();
-        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
-        fetchedUser.setPos(new Position(5,5));// pour les tests
-        Position pos = fetchedUser.getPos();
-        return pos;
-
-    }
+//    /**
+//     * R
+//     * TODO refaire avec token
+//     */
+//    @GET
+//    @Produces("text/plain")
+//    @Path("/get/{mail}")
+//    public Position getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
+//
+//        MorphiaService morphiaService;
+//        UserDAO userDAO;
+//
+//        morphiaService = new MorphiaService();
+//        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+//        Utilisateur fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
+//        fetchedUser.setPos(new Position(5,5));// pour les tests
+//        Position pos = fetchedUser.getPos();
+//        return pos;
+//
+//    }
 
     /**
      * A
@@ -135,7 +135,7 @@ public class UserController {
 
         System.out.println(cleToken);
         if (cleTokenReceived.equals(cleToken)){
-            userDAO.updateByEmail(mailReceived,field,value);
+            userDAO.updateByToken(mailReceived,field,value);
 
             return "completed";
         }
@@ -207,15 +207,19 @@ public class UserController {
                 result=fetchedUser.getToken();
                 break;
             case"mail":
-
+                result=fetchedUser.getMail();
                 break;
             case"nom":
-
+                result=fetchedUser.getNom();
                 break;
             case"prenom":
-
+                result=fetchedUser.getPrenom();
+                break;
+            default:
+                result="error";
                 break;
         }
+        return result;
 
     }
 

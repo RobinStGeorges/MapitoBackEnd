@@ -14,14 +14,12 @@ public class Utilisateur {
     @Id
     private ObjectId _id; // always required
 
-    @Indexed
+
     private String mail;
 
     private String token;
     private String password;
     private ArrayList<Friend> friends;
-    private Position pos;
-    private String phoneId;
     private int cptWrongtoken;
     private String nom;
     private String prenom;
@@ -58,13 +56,6 @@ public class Utilisateur {
         this.prenom = prenom;
     }
 
-    public Position getPos() {
-        return pos;
-    }
-
-    public void setPos(Position pos) {
-        this.pos = pos;
-    }
 
     public int getCptWrongtoken() {
         return cptWrongtoken;
@@ -114,8 +105,6 @@ public class Utilisateur {
         this.friends = friends;
     }
 
-    public String getPhoneId() { return phoneId;}
 
-    public void setPhoneId(String phoneId) { this.phoneId = phoneId;}
 
 }

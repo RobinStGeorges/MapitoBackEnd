@@ -11,4 +11,5 @@ Model\TokenTournament.class
 Control\UserController.class
 conf\filter\GsonProvider.class
 service\MorphiaService.class
+Model\dto\TokenDTO.class
 Model\Position.class

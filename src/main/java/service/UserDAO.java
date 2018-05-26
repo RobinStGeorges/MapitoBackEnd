@@ -39,6 +39,7 @@ public interface UserDAO extends DAO<Utilisateur, ObjectId>{
 
     public void updateByEmail(String mail, String field, String value);
 
+    public void updateByToken(String token, String field, String value);
 
     public void updatePosByEmail(String mail, Position position);
 

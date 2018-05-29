@@ -1,6 +1,7 @@
 package Control;
 
 import Model.TokenTournament;
+import Model.dto.GetFriendDTO;
 import com.google.gson.Gson;
 
 import Model.Position;
@@ -151,28 +152,25 @@ public class UserController {
      * R
      */
     @PUT
-    @Path("/updatePos/{mail}/{lon}/{lat}/{token}")
+    @Path("/updatePos/{lon}/{lat}/{token}")
     @Consumes("text/plain")
-    public String updateUserPos(@PathParam("mail") String mail,@PathParam("lon") double lon,
-                             @PathParam("lat") double lat,@PathParam("token") String token) throws UnknownHostException {
+    public String updateUserPos(@PathParam("lon") double lon,@PathParam("lat") double lat,@PathParam("token") String token) throws UnknownHostException {
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByEmail(mail);
-        String segments[] = fetchedUser.getToken().split(":");
-        String segments2[] =token.split(":");
-        String cleToken= segments[1];
-        String cleToken2= segments[1];
-//        System.out.println(cleToken);
-        if (cleToken2.equals(cleToken)){
-            Position position = new Position(lat,lon);
-            userDAO.updatePosByEmail(mail,position);
+        Utilisateur fetchedUser = userDAO.getByEmail(token);
+        //last latitude
+        double last = fetchedUser.getPos().getLatitude();
+        fetchedUser.getPos().setLastlatitude(last);
+        //last longitude
+        last = fetchedUser.getPos().getLongitude();
+        fetchedUser.getPos().setLastlongitude(last);
+        // new latitude et longitude
+        fetchedUser.getPos().setLatitude(lat);
+        fetchedUser.getPos().setLongitude(lon);
+        //mise a jours du users
+        userDAO.updatePosByEmail(token,fetchedUser.getPos());
 
-            return "completed";
-        }
-        else{
-            throw new RuntimeException("Mon erreur");
-        }
     }
 
 
@@ -221,6 +219,19 @@ public class UserController {
         }
         return result;
 
+    }
+    @GET
+    @Path("/getField/{token}")
+    public ArrayList<GetFriendDTO> getFriends(@PathParam("token") String token) throws UnknownHostException{
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        ArrayList<GetFriendDTO> friends = new ArrayList<GetFriendDTO>();
+        for( Utilisateur friend : fetchedUser.getFriends()){
+            friends.add(new GetFriendDTO(friend.getMail(),friend.getPos().getLatitude(),friend.getPos().getLongitude(),friend.getPos().getLastlatitude(),friend.getPos().getLastlongitude()));
+        }
+        return friends;
     }
 
 }

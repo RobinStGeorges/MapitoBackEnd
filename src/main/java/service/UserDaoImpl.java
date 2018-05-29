@@ -13,8 +13,8 @@ import org.mongodb.morphia.query.UpdateOperations;
 
 /**
  * implementation of
- * @author Alex
  *
+ * @author Alex
  */
 public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements UserDAO {
 
@@ -30,7 +30,9 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
         return query.get();
     }
+
     @Override
+
     public void updateByToken(String token, String field, String value){
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set(field, value);
@@ -40,6 +42,7 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     }
     @Override
     public void updateByEmail(String mail, String field, String value){
+
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set(field, value);
 
@@ -48,7 +51,7 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     }
 
     @Override
-    public void updatePosByEmail(String mail,Position position) {
+    public void updatePosByEmail(String mail, Position position) {
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("pos", position);
 

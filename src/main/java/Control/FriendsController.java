@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/friends")
 public class FriendsController {
-    //ajouter ami
+
 
     //supprimerami
 

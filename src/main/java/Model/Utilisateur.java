@@ -45,7 +45,7 @@ private double longitude;
         this.cptWrongtoken=0;
         this.nom=nom;
         this.prenom=prenom;
-        this.friends=new ArrayList<>();
+        this.friends=new ArrayList<Utilisateur>();
     }
 
 
@@ -110,8 +110,8 @@ private double longitude;
         return friends;
     }
 
-    public void setFriends(ArrayList<Utilisateur> friends) {
-        this.friends = friends;
+    public void addFriends(Utilisateur friend) {
+        this.friends.add(friend);
     }
 
     public double getLatitude() {
@@ -153,4 +153,6 @@ private double longitude;
     public void setListeAttente(String[] listeAttente) {
         this.listeAttente = listeAttente;
     }
+
+
 }

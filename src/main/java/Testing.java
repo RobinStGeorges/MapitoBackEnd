@@ -1,22 +1,26 @@
-//
-//import Model.Friend;
-//import Model.Position;
-//import Model.Utilisateur;
-//import com.mongodb.*;
-//import org.mongodb.morphia.*;
-//import service.MorphiaService;
-//import service.UserDAO;
-//import service.UserDaoImpl;
-//
-//
-//import java.net.UnknownHostException;
-//import java.util.ArrayList;
-//
-//
-//public class Testing {
-//    public static void main(String[] args) throws UnknownHostException {
-//
-//
+
+import Model.Friend;
+import Model.Position;
+import Model.Utilisateur;
+import com.mongodb.*;
+import org.mongodb.morphia.*;
+import service.MorphiaService;
+import service.UserDAO;
+import service.UserDaoImpl;
+
+
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
+
+public class Testing {
+    public static void main(String[] args) throws UnknownHostException {
+        Utilisateur user = new Utilisateur("mail.gmail@gmail.com","motdepasse","test","test");
+
+
+        ArrayList<Utilisateur>  AL = new ArrayList<Utilisateur>();
+        AL.add(user);
+        System.out.println(AL);
 //         MorphiaService morphiaService;
 //         UserDAO userDAO;
 //
@@ -30,5 +34,5 @@
 //        userDAO.updateByEmail("mail.gmail@gmail.com","phoneId","0102030405");
 //        fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
 //        System.out.println(fetchedUser.getPhoneId());
-//    }
-//}
+    }
+}

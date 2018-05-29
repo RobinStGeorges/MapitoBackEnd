@@ -19,6 +19,7 @@ public class Utilisateur {
 
     private String token;
     private String password;
+
 private double latitude;
 private double longitude;
 
@@ -26,6 +27,7 @@ private double longitude;
     private ArrayList<Utilisateur> friends;
     private Position pos;
     private String phoneId;
+
 
     private int cptWrongtoken;
     private String nom;

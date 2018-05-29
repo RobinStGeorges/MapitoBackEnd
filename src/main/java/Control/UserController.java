@@ -218,20 +218,15 @@ public class UserController {
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
         Utilisateur fetchedUser = userDAO.getByToken(token);
-        System.out.println(fetchedUser);
 
         Utilisateur user2Add = userDAO.getByEmail(mail);
-        System.out.println(user2Add);
+
+        ArrayList<Utilisateur> AL;
+        AL=fetchedUser.getFriends();
 
         if (user2Add != null){
-            System.out.println("avant");
-
-            fetchedUser.addFriends(user2Add);
-
-
-            System.out.println("1");
-            userDAO.updateFriendsByToken(token, fetchedUser.getFriends() );
-            System.out.println("2");
+            AL.add(user2Add);
+            userDAO.updateFriendsByToken(token, AL );
             return "200";
         }
         else{
@@ -244,16 +239,30 @@ public class UserController {
 
     @GET
     @Path("/getFriends/{token}")
-    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
+
+    public String getUserFriends(@PathParam("token") String token) throws UnknownHostException{
+
+
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
-        ArrayList<GetFriendDTO> friends = new ArrayList<GetFriendDTO>();
+        ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
+        ArrayList<Utilisateur> AL;
+        AL=fetchedUser.getFriends();
+        if(AL != null){
+            for( Utilisateur friend : AL){
+                System.out.println("1");
+                GetFriendDTO dtoF = new GetFriendDTO(friend.getMail(),friend.getPrenom(),friend.getPos().getLatitude(),friend.getPos().getLongitude(),friend.getPos().getLastlatitude(),friend.getPos().getLastlongitude());
+                System.out.println("2");
+                friends.add(dtoF);
+                System.out.println("3");
 
-        for( Utilisateur friend : fetchedUser.getFriends()){
-            friends.add(new GetFriendDTO(friend.getMail(),friend.getPos().getLatitude(),friend.getPos().getLongitude(),friend.getPos().getLastlatitude(),friend.getPos().getLastlongitude()));
-        }
-        return friends;
+            }
+           // return friends;
+        } else return "pas d'amis";
+
+
+        return "200";
     }
 
 

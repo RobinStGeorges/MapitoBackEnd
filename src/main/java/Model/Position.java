@@ -10,13 +10,18 @@ public class Position {
     private ObjectId _id; // always required
     private double latitude;
     private double longitude;
+    private double lastlatitude;
+    private double lastlongitude;
     private double distance;
-    public double Position;
 
+    public Position(){
+    }
     public Position(double latitude, double longitude) {
+        this._id = _id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
     public String getPosString(){
         return getLatitude()+"-"+getLongitude() ;
     }
@@ -58,4 +63,16 @@ public class Position {
     public double getLongitude() {
         return longitude;
     }
+
+    public double getLastlatitude() { return lastlatitude; }
+
+    public void setLastlatitude(double lastlatitude) { this.lastlatitude = lastlatitude; }
+
+    public double getLastlongitude() { return lastlongitude; }
+
+    public void setLastlongitude(double lastlongitude) { this.lastlongitude = lastlongitude; }
+
+    public double getDistance() { return distance; }
+
+    public void setDistance(double distance) { this.distance = distance; }
 }

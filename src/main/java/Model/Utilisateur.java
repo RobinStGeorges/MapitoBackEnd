@@ -19,7 +19,13 @@ public class Utilisateur {
 
     private String token;
     private String password;
-    private ArrayList<Friend> friends;
+
+
+
+    private ArrayList<Utilisateur> friends;
+    private Position pos;
+    private String phoneId;
+
     private int cptWrongtoken;
     private String nom;
     private String prenom;
@@ -97,11 +103,11 @@ public class Utilisateur {
     //    this.phoneId.put(phoneId,"false");
  //   }
 
-    public ArrayList<Friend> getFriends() {
+    public ArrayList<Utilisateur> getFriends() {
         return friends;
     }
 
-    public void setFriends(ArrayList<Friend> friends) {
+    public void setFriends(ArrayList<Utilisateur> friends) {
         this.friends = friends;
     }
 

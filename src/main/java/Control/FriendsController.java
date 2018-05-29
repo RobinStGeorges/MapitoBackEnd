@@ -56,6 +56,9 @@ public class FriendsController {
                     Utilisateur userRequesting = userDAO.getByEmail(mailAAccepter);
                     userRequesting.getFriends().add(fetchedUser);
                     fetchedUser.getFriends().add(userRequesting);
+
+                    Notification notification = new Notification("accepted","---"+fetchedUser.getMail()+"--- just accepted your invitation !");
+                    userRequesting.getListeNotifications().add(notification);
                     break;
             }
         }

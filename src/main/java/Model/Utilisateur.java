@@ -24,7 +24,7 @@ private double latitude;
 private double longitude;
 
 
-    private ArrayList<Utilisateur> friends;
+    private ArrayList<Utilisateur> friends = new ArrayList<Utilisateur>();
     private Position pos;
     private String phoneId;
 
@@ -45,7 +45,7 @@ private double longitude;
         this.cptWrongtoken=0;
         this.nom=nom;
         this.prenom=prenom;
-        this.friends=new ArrayList<Utilisateur>();
+
     }
 
 

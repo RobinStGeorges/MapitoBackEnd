@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.Position;
@@ -40,6 +41,8 @@ public interface UserDAO extends DAO<Utilisateur, ObjectId>{
     public void updateByEmail(String mail, String field, String value);
 
     public void updateByToken(String token, String field, String value);
+
+    public void updateFriendsByToken(String token,ArrayList<Utilisateur> value);
 
     public void updatePosByToken(String token,Position pos);
 

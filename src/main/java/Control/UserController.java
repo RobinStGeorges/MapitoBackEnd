@@ -123,7 +123,6 @@ public class UserController {
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
             Utilisateur fetchedUser = userDAO.getByToken(token);
             if (fetchedUser!= null) {
                 userDAO.updateByToken(token, field, value);
@@ -211,8 +210,40 @@ public class UserController {
         return result;
 
     }
+
+    @PUT
+    @Path("addFriend/{token}/{mail}")
+    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        System.out.println(fetchedUser);
+
+        Utilisateur user2Add = userDAO.getByEmail(mail);
+        System.out.println(user2Add);
+
+        if (user2Add != null){
+            System.out.println("avant");
+
+            fetchedUser.addFriends(user2Add);
+
+
+            System.out.println("1");
+            userDAO.updateFriendsByToken(token, fetchedUser.getFriends() );
+            System.out.println("2");
+            return "200";
+        }
+        else{
+            return "400";
+        }
+
+
+    }
+
+
     @GET
-    @Path("/getField/{token}")
+    @Path("/getFriends/{token}")
     public ArrayList<GetFriendDTO> getFriends(@PathParam("token") String token) throws UnknownHostException{
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -224,5 +255,7 @@ public class UserController {
         }
         return friends;
     }
+
+
 
 }

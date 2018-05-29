@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Model.Position;
@@ -36,6 +37,16 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     public void updateByToken(String token, String field, String value){
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set(field, value);
+
+        ds.update(query, ops);
+
+    }
+
+    @Override
+
+    public void updateFriendsByToken(String token,ArrayList<Utilisateur> value){
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
+        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("friends", value);
 
         ds.update(query, ops);
 

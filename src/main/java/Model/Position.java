@@ -43,6 +43,7 @@ public class Position {
 
 
         distance = Math.pow(distance, 2) ;
+        System.out.println("la distance est : "+distance);
         return distance;
     }
 

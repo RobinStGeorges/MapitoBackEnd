@@ -139,13 +139,14 @@ public class UserController {
      * R
      */
     @PUT
-    @Path("/updatePos/{lon}/{lat}/{token}")
+    @Path("/updatePos/{token}/{lon}/{lat}")
     @Consumes("text/plain")
-    public void updateUserPos(@PathParam("lon") double lon,@PathParam("lat") double lat,@PathParam("token") String token) throws UnknownHostException {
-
+    public String updateUserPos(@PathParam("token") String token,@PathParam("lon") double lon,@PathParam("lat") double lat) throws UnknownHostException {
+        System.out.println("in");
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByEmail(token);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
         //last latitude
         double last = fetchedUser.getPos().getLatitude();
         fetchedUser.getPos().setLastlatitude(last);
@@ -157,26 +158,14 @@ public class UserController {
         // new latitude et longitude
         fetchedUser.getPos().setLatitude(lat);
         fetchedUser.getPos().setLongitude(lon);
-
+        System.out.println("last");
         //mise a jours du users
         userDAO.updatePosByToken(token,fetchedUser.getPos());
+        return "200";
 
     }
 
 
-//    @GET
-//    @Path("/getFriendsPosition/{token}")
-//    public ArrayList<Position> getFriendsDistance(@PathParam("token") String token) throws UnknownHostException {
-//        ArrayList<Position> listePosition = new ArrayList<>();
-//        MorphiaService morphiaService= new MorphiaService();
-//
-//        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-//        String mail = token.split(":");
-//        Utilisateur fetchedUser = userDAO.getByEmail(mail);
-//
-//
-//        return listePosition;
-//    }
 
 
     /*TODO */
@@ -260,13 +249,11 @@ public class UserController {
 
                 double distance = pos.getDistance(fetchedUser.getPos().getLatitude(),latitude,fetchedUser.getPos().getLongitude(),longitude);
                 boolean inTheArea = false;
-                if(distance < 100){
+                if(distance < 100.0){
                     inTheArea=true;
                 }
                 GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
-                System.out.println("8");
                 friends.add(dtoF);
-                System.out.println("9");
             }
         }
             return friends;

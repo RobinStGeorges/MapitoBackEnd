@@ -7,8 +7,9 @@ public class GetFriendDTO {
     private double longitude;
     private double lastlatitude;
     private double lastlongitude;
+    private boolean inTheArea;
 
-    public GetFriendDTO(String mail,String prenom, double latitude, double longitude, double lastlatitude, double lastlongitude) {
+    public GetFriendDTO(String mail,String prenom,boolean inTheArea, double latitude, double longitude, double lastlatitude, double lastlongitude) {
         this.mail = mail;
         this.prenom=prenom;
         this.latitude = latitude;

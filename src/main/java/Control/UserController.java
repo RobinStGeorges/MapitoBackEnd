@@ -251,12 +251,17 @@ public class UserController {
         AL=fetchedUser.getFriends();
         if(AL != null){
             for( Utilisateur friend : AL){
-                System.out.println("1");
-                GetFriendDTO dtoF = new GetFriendDTO(friend.getMail(),friend.getPrenom(),friend.getPos().getLatitude(),friend.getPos().getLongitude(),friend.getPos().getLastlatitude(),friend.getPos().getLastlongitude());
-                System.out.println("2");
+                String mail = friend.getMail();
+                String prenom = friend.getPrenom();
+                double latitude = friend.getPos().getLatitude();
+                double longitude =friend.getPos().getLongitude();
+                double lastlat = friend.getPos().getLastlatitude();
+                double lastlon = friend.getPos().getLastlongitude();
+                boolean inTheArea=true;
+                GetFriendDTO dtoF = new GetFriendDTO(mail,prenom,inTheArea,latitude,longitude,lastlat,lastlon);
+                System.out.println("8");
                 friends.add(dtoF);
-                System.out.println("3");
-
+                System.out.println("9");
             }
            // return friends;
         } else return "pas d'amis";

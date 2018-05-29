@@ -8,10 +8,10 @@ import org.mongodb.morphia.annotations.*;
 public class Position {
     @Id
     private ObjectId _id; // always required
-    private double latitude;
-    private double longitude;
-    private double lastlatitude;
-    private double lastlongitude;
+    private double latitude=0;
+    private double longitude=0;
+    private double lastlatitude=0;
+    private double lastlongitude=0;
     private double distance;
 
     public Position(){

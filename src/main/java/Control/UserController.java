@@ -244,12 +244,12 @@ public class UserController {
 
     @GET
     @Path("/getFriends/{token}")
-    public ArrayList<GetFriendDTO> getFriends(@PathParam("token") String token) throws UnknownHostException{
+    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<GetFriendDTO> friends = new ArrayList<GetFriendDTO>();
+
         for( Utilisateur friend : fetchedUser.getFriends()){
             friends.add(new GetFriendDTO(friend.getMail(),friend.getPos().getLatitude(),friend.getPos().getLongitude(),friend.getPos().getLastlatitude(),friend.getPos().getLastlongitude()));
         }

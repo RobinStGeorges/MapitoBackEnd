@@ -239,29 +239,37 @@ public class UserController {
 
     @GET
     @Path("/getFriends/{token}")
-    public String getUserFriends(@PathParam("token") String token) throws UnknownHostException{
+    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
-        ArrayList<Utilisateur> AL;
-        AL=fetchedUser.getFriends();
-        if(AL != null){
-            for( Utilisateur friend : AL){
-                System.out.println("1");
-                GetFriendDTO dtoF = new GetFriendDTO(friend.getMail(),friend.getPos().getLatitude(),friend.getPos().getLongitude(),friend.getPos().getLastlatitude(),friend.getPos().getLastlongitude());
-                System.out.println("2");
+        ArrayList<Utilisateur> listeFriends=fetchedUser.getFriends();
+        if(listeFriends != null){
+
+            for (Utilisateur friend : listeFriends){
+
+                String mail=friend.getMail();
+                String prenom=friend.getPrenom();
+                Position pos = friend.getPos();
+                double latitude =  friend.getPos().getLatitude();
+                double longitude = friend.getPos().getLongitude();
+                double lastlat =  friend.getPos().getLastlatitude();
+                double lastlon =  friend.getPos().getLastlongitude();
+
+                double distance = pos.getDistance(fetchedUser.getPos().getLatitude(),latitude,fetchedUser.getPos().getLongitude(),longitude);
+                boolean inTheArea = false;
+                if(distance < 100){
+                    inTheArea=true;
+                }
+                GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
+                System.out.println("8");
                 friends.add(dtoF);
-                System.out.println("3");
-
+                System.out.println("9");
             }
-           // return friends;
         }
-        else return "pas d'amis";
-
-
-        return "200";
+            return friends;
     }
 
 

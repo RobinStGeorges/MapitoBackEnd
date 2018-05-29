@@ -20,11 +20,8 @@ public class Utilisateur {
     private String token;
     private String password;
 
-private double latitude;
-private double longitude;
-
-
     private ArrayList<Utilisateur> friends = new ArrayList<Utilisateur>();
+    @Embedded
     private Position pos;
     private String phoneId;
 
@@ -45,6 +42,7 @@ private double longitude;
         this.cptWrongtoken=0;
         this.nom=nom;
         this.prenom=prenom;
+        this.pos=new Position();
 
     }
 
@@ -114,21 +112,7 @@ private double longitude;
         this.friends.add(friend);
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 
     public Position getPos() {
         return pos;

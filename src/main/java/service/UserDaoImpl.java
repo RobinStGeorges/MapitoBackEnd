@@ -51,12 +51,19 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     }
 
     @Override
-    public void updatePosByEmail(String mail, Position position) {
-        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
+    public void updatePosByToken(String token, Position position) {
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("pos", position);
 
         ds.update(query, ops);
     }
+//    @Override
+//    public void updatePosByEmail(String mail, Position position) {
+//        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
+//        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("pos", position);
+//
+//        ds.update(query, ops);
+//    }
 
     @Override
     public Utilisateur getByToken(String token) {

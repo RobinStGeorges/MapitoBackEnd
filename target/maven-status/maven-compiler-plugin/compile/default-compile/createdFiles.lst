@@ -1,6 +1,7 @@
 conf\exception\RuntimeExceptionMapper.class
 Model\Friend.class
 conf\App.class
+Model\dto\GetFriendDTO.class
 service\UserDaoImpl.class
 service\UserDAO.class
 Model\Carnet.class

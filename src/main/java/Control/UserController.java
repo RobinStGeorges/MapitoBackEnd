@@ -124,28 +124,16 @@ public class UserController {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
-        /*parse du token received*/
-        String segmentsReceived[] =token.split(":");;
-        String mailReceived = segmentsReceived[0];
-        String cleTokenReceived = segmentsReceived[1];
+            Utilisateur fetchedUser = userDAO.getByToken(token);
+            if (fetchedUser!= null) {
+                userDAO.updateByToken(token, field, value);
 
-        /*get user token & parsed it */
-        Utilisateur fetchedUser = userDAO.getByEmail(mailReceived);
-        String segments[] = fetchedUser.getToken().split(":");
-        String cleToken= segments[1];
+                return "200";
+            }
+            else{
+                throw new RuntimeException("400");
+            }
 
-        System.out.println(cleToken);
-        if (cleTokenReceived.equals(cleToken)){
-            userDAO.updateByToken(mailReceived,field,value);
-
-            return "completed";
-        }
-        else{
-            throw new RuntimeException("Mon erreur");
-        }
-
-
-        /*DANS LE FRONT : si "" -> mettre la valeur a celle deja presente dans le user*/
     }
 
     /**
@@ -154,7 +142,7 @@ public class UserController {
     @PUT
     @Path("/updatePos/{lon}/{lat}/{token}")
     @Consumes("text/plain")
-    public String updateUserPos(@PathParam("lon") double lon,@PathParam("lat") double lat,@PathParam("token") String token) throws UnknownHostException {
+    public void updateUserPos(@PathParam("lon") double lon,@PathParam("lat") double lat,@PathParam("token") String token) throws UnknownHostException {
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -162,12 +150,15 @@ public class UserController {
         //last latitude
         double last = fetchedUser.getPos().getLatitude();
         fetchedUser.getPos().setLastlatitude(last);
+
         //last longitude
         last = fetchedUser.getPos().getLongitude();
         fetchedUser.getPos().setLastlongitude(last);
+
         // new latitude et longitude
         fetchedUser.getPos().setLatitude(lat);
         fetchedUser.getPos().setLongitude(lon);
+
         //mise a jours du users
         userDAO.updatePosByEmail(token,fetchedUser.getPos());
 

@@ -19,7 +19,8 @@ public class Utilisateur {
 
     private String token;
     private String password;
-
+private double latitude;
+private double longitude;
 
 
     private ArrayList<Utilisateur> friends;
@@ -111,6 +112,43 @@ public class Utilisateur {
         this.friends = friends;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Position getPos() {
+        return pos;
+    }
+
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
+
+    public String getPhoneId() {
+        return phoneId;
+    }
+
+    public void setPhoneId(String phoneId) {
+        this.phoneId = phoneId;
+    }
+
+    public String[] getListeAttente() {
+        return listeAttente;
+    }
+
+    public void setListeAttente(String[] listeAttente) {
+        this.listeAttente = listeAttente;
+    }
 }

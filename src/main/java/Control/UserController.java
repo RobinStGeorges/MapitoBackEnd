@@ -160,7 +160,7 @@ public class UserController {
         fetchedUser.getPos().setLongitude(lon);
 
         //mise a jours du users
-        userDAO.updatePosByEmail(token,fetchedUser.getPos());
+        userDAO.updatePosByToken(token,fetchedUser.getPos());
 
     }
 

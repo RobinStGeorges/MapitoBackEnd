@@ -1,6 +1,7 @@
 conf\exception\RuntimeExceptionMapper.class
 Model\Friend.class
 conf\App.class
+Model\dto\GetFriendDTO.class
 service\UserDaoImpl.class
 service\UserDAO.class
 Model\Carnet.class
@@ -11,4 +12,5 @@ Model\TokenTournament.class
 Control\UserController.class
 conf\filter\GsonProvider.class
 service\MorphiaService.class
+Model\dto\TokenDTO.class
 Model\Position.class

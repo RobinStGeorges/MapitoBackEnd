@@ -14,14 +14,21 @@ public class Utilisateur {
     @Id
     private ObjectId _id; // always required
 
-    @Indexed
+
     private String mail;
 
     private String token;
     private String password;
+
+private double latitude;
+private double longitude;
+
+
     private ArrayList<Utilisateur> friends;
     private Position pos;
     private String phoneId;
+
+
     private int cptWrongtoken;
     private String nom;
     private String prenom;
@@ -58,13 +65,6 @@ public class Utilisateur {
         this.prenom = prenom;
     }
 
-    public Position getPos() {
-        return pos;
-    }
-
-    public void setPos(Position pos) {
-        this.pos = pos;
-    }
 
     public int getCptWrongtoken() {
         return cptWrongtoken;
@@ -114,8 +114,43 @@ public class Utilisateur {
         this.friends = friends;
     }
 
-    public String getPhoneId() { return phoneId;}
+    public double getLatitude() {
+        return latitude;
+    }
 
-    public void setPhoneId(String phoneId) { this.phoneId = phoneId;}
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Position getPos() {
+        return pos;
+    }
+
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
+
+    public String getPhoneId() {
+        return phoneId;
+    }
+
+    public void setPhoneId(String phoneId) {
+        this.phoneId = phoneId;
+    }
+
+    public String[] getListeAttente() {
+        return listeAttente;
+    }
+
+    public void setListeAttente(String[] listeAttente) {
+        this.listeAttente = listeAttente;
+    }
 }

@@ -3,6 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Notification;
 import Model.Position;
 import Model.Utilisateur;
 import org.bson.types.ObjectId;
@@ -43,7 +44,14 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     }
 
     @Override
+    public void updateNotifsByToken(String token, ArrayList<Notification> notif) {
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
+        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("listeNotifications", notif);
 
+        ds.update(query, ops);
+    }
+
+    @Override
     public void updateFriendsByToken(String token,ArrayList<Utilisateur> value){
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("friends", value);
@@ -51,6 +59,17 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
         ds.update(query, ops);
 
     }
+
+    @Override
+    public void updateFriendsByEmail(String mail,ArrayList<Utilisateur> value){
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
+        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("friends", value);
+
+        ds.update(query, ops);
+
+    }
+
+
     @Override
     public void updateByEmail(String mail, String field, String value){
 

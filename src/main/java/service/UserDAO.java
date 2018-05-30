@@ -3,6 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Notification;
 import Model.Position;
 import Model.Utilisateur;
 import org.bson.types.ObjectId;
@@ -42,7 +43,11 @@ public interface UserDAO extends DAO<Utilisateur, ObjectId>{
 
     public void updateByToken(String token, String field, String value);
 
+    public void updateNotifsByToken(String token, ArrayList<Notification> notif);
+
     public void updateFriendsByToken(String token,ArrayList<Utilisateur> value);
+
+    public void updateFriendsByEmail(String mail, ArrayList<Utilisateur> value);
 
     public void updatePosByToken(String token,Position pos);
 

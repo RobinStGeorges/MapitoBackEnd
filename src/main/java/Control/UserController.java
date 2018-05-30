@@ -244,19 +244,23 @@ public class UserController {
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
         Utilisateur fetchedUser = userDAO.getByToken(token);
-        System.out.println("1");
 
         if(fetchedUser.getListeNotifications() == null){
             System.out.println("null");
         }
         ArrayList<Notification> listeNotifs;
         listeNotifs=fetchedUser.getListeNotifications();
-        System.out.println("2");
 
         Notification notif = new Notification("addFriend","---"+"unMailrandom@gmail.com"+"--- want to add you ! ");
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(token,listeNotifs);
         return "200";
+    }
+
+    @PUT
+    @Path("/sendProxNotif/{token}/{mail}")
+    public void sendUserProxNotif(@PathParam("token")String token,@PathParam("mail")String mail){
+        
     }
 
     @GET
@@ -282,9 +286,9 @@ public class UserController {
                 double longitude = friend.getPos().getLongitude();
                 double lastlat =  friend.getPos().getLastlatitude();
                 double lastlon =  friend.getPos().getLastlongitude();
-                double distance = pos.getDistance(fetchedUser.getPos().getLatitude(),latitude,fetchedUser.getPos().getLongitude(),longitude);
+                double distance = friend.getPos().distance(fetchedUser.getPos().getLatitude(),fetchedUser.getPos().getLongitude(),latitude,longitude,"K");
                 boolean inTheArea = false;
-                if(distance < 100.0){
+                if(distance < 0.3){
                     inTheArea=true;
                 }
                 GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);

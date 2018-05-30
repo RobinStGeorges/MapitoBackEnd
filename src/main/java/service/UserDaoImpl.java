@@ -3,6 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Notification;
 import Model.Position;
 import Model.Utilisateur;
 import org.bson.types.ObjectId;
@@ -40,6 +41,14 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
         ds.update(query, ops);
 
+    }
+
+    @Override
+    public void updateNotifsByToken(String token, ArrayList<Notification> notif) {
+        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
+        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("listeNotifications", notif);
+
+        ds.update(query, ops);
     }
 
     @Override

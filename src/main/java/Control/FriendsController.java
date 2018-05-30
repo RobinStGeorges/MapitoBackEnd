@@ -28,6 +28,10 @@ public class FriendsController {
 
     @POST
     @Path("friendRequest/{token}/{mail}")
+    /**
+     * R
+     * send a friend resquest using the mail a the friend
+     */
     public String newFriendRequest(@PathParam("token") String token,@PathParam("mail") String mail) throws UnknownHostException {
 
         MorphiaService morphiaService= new MorphiaService();
@@ -47,6 +51,10 @@ public class FriendsController {
 
     @PUT
     @Path("acceptNotification/{token}")
+    /**
+     * R
+     * When user clic on accept the invitation
+     */
     public void acceptNotification(@PathParam("token")String token) throws UnknownHostException {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -78,9 +86,10 @@ public class FriendsController {
     @PUT
     @Path("deleteFriend/{token}/{mail}")
     /**
-     *
+     *R
+     * when a user delete e friend, delete himself from the friend list too
      */
-    public void suppFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+    public String suppFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
         MorphiaService morphiaService = new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
@@ -90,11 +99,13 @@ public class FriendsController {
         ArrayList<Utilisateur> listeFriends = fetchedUser.getFriends();
 
         Iterator<Utilisateur> iterator = listeFriends.iterator();
+        boolean trouve2 = false;
         while ( iterator.hasNext() ) {
             Utilisateur user = iterator.next();
             if(user.getMail().equals(mail)){
                 iterator.remove();
                 System.out.println("2");
+                trouve2=true;
             }
         }
         userDAO.updateFriendsByToken(token,listeFriends);
@@ -103,17 +114,22 @@ public class FriendsController {
         Utilisateur requestingUser = userDAO.getByEmail(mail);
         ArrayList<Utilisateur> listeRequestedUserFriends = requestingUser.getFriends();
         Iterator<Utilisateur> iterator2 = listeRequestedUserFriends.iterator();
-        System.out.println("3.1");
+        boolean trouve = false;
         while ( iterator2.hasNext() ) {
-            System.out.println("3.2");//last seen
             Utilisateur user = iterator2.next();
             if(user.getMail().equals(fetchedUser.getMail())){
-                System.out.println("3.3");
                 iterator2.remove();
-                System.out.println("4");
+                trouve=true;
             }
         }
+
         userDAO.updateFriendsByEmail(mail,listeRequestedUserFriends);
-        System.out.println("5");
+        if (!trouve || !trouve2) {
+
+            return "400";
+        }
+        else{
+            return "200";
+        }
     }
 }

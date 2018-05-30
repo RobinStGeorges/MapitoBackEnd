@@ -24,8 +24,7 @@ public class Utilisateur {
     private int cptWrongtoken;
     private String nom;
     private String prenom;
-    @Embedded
-    private ArrayList<Notification> listeNotifications; /*TODO faire les methodes correspondantes */
+    private ArrayList<Notification> listeNotifications = new ArrayList<Notification>(); /*TODO faire les methodes correspondantes */
 
     public Utilisateur(){
 
@@ -39,6 +38,7 @@ public class Utilisateur {
         this.nom=nom;
         this.prenom=prenom;
         this.pos=new Position();
+//        listeNotifications.add(new Notification("Depart","testesttest"));
 
     }
 

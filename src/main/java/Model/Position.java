@@ -12,8 +12,6 @@ public class Position {
     private double longitude=0;
     private double lastlatitude=0;
     private double lastlongitude=0;
-    private double distance;
-
     public Position(){
     }
     public Position(double latitude, double longitude) {
@@ -47,6 +45,7 @@ public class Position {
         return distance;
     }
 
+
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
@@ -72,7 +71,5 @@ public class Position {
 
     public void setLastlongitude(double lastlongitude) { this.lastlongitude = lastlongitude; }
 
-    public double getDistance() { return distance; }
 
-    public void setDistance(double distance) { this.distance = distance; }
 }

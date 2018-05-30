@@ -36,6 +36,7 @@ public class Utilisateur {
         this.cptWrongtoken=0;
         this.nom=nom;
         this.prenom=prenom;
+        this.pos=new Position();
 
     }
 

@@ -5,7 +5,6 @@ Model\dto\GetFriendDTO.class
 service\UserDaoImpl.class
 service\UserDAO.class
 Testing.class
-Model\Carnet.class
 conf\filter\TestEndpoint.class
 Control\FriendsController.class
 Model\Utilisateur.class

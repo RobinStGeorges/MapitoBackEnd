@@ -8,6 +8,7 @@ import Model.Position;
 import Model.Utilisateur;
 
 import service.MorphiaService;
+import service.SendMail;
 import service.UserDAO;
 import service.UserDaoImpl;
 
@@ -240,34 +241,53 @@ public class UserController {
     @GET
     @Path("/getFriends/{token}")
 
-    public String getUserFriends(@PathParam("token") String token) throws UnknownHostException{
-
+    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
-        ArrayList<Utilisateur> AL;
-        AL=fetchedUser.getFriends();
-        if(AL != null){
-            for( Utilisateur friend : AL){
-                String mail = friend.getMail();
-                String prenom = friend.getPrenom();
-                double latitude = friend.getPos().getLatitude();
-                double longitude =friend.getPos().getLongitude();
-                double lastlat = friend.getPos().getLastlatitude();
-                double lastlon = friend.getPos().getLastlongitude();
-                boolean inTheArea=true;
-                GetFriendDTO dtoF = new GetFriendDTO(mail,prenom,inTheArea,latitude,longitude,lastlat,lastlon);
-                System.out.println("8");
+
+        ArrayList<Utilisateur> listeFriends=fetchedUser.getFriends();
+        if(listeFriends != null){
+
+            for (Utilisateur friend : listeFriends){
+
+                String mail=friend.getMail();
+                String prenom=friend.getPrenom();
+                Position pos = friend.getPos();
+                double latitude =  friend.getPos().getLatitude();
+                double longitude = friend.getPos().getLongitude();
+                double lastlat =  friend.getPos().getLastlatitude();
+                double lastlon =  friend.getPos().getLastlongitude();
+
+                double distance = pos.getDistance(fetchedUser.getPos().getLatitude(),latitude,fetchedUser.getPos().getLongitude(),longitude);
+                boolean inTheArea = false;
+                if(distance < 100){
+                    inTheArea=true;
+                }
+                GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
                 friends.add(dtoF);
-                System.out.println("9");
             }
-           // return friends;
-        } else return "pas d'amis";
+        }
+            return friends;
+    }
+    @PUT
+    @Path("/sendmail/{token}")
+    public void resetmdp(@PathParam("token") String token)throws UnknownHostException{
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
 
 
-        return "200";
+        String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n"};
+        String newpassword = "";
+        for(int i=0 ;i < 16 ; i ++){
+
+            newpassword = newpassword + tablounet[(int)(Math.random() * ( tablounet.length ) ) ];
+        }
+        userDAO.updateByToken("token","password",newpassword);
+        SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"");
     }
 
 

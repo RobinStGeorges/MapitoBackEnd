@@ -17,35 +17,13 @@ import javax.ws.rs.core.Response;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/users")
 public class UserController {
-
-
-    //RESTEASY003065: Cannot consume content type !!!!!!
-//    /**
-//     * R
-//     * TODO refaire avec token
-//     */
-//    @GET
-//    @Produces("text/plain")
-//    @Path("/get/{mail}")
-//    public Position getPosUser(@PathParam("mail") String mail) throws UnknownHostException {
-//
-//        MorphiaService morphiaService;
-//        UserDAO userDAO;
-//
-//        morphiaService = new MorphiaService();
-//        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-//        Utilisateur fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
-//        fetchedUser.setPos(new Position(5,5));// pour les tests
-//        Position pos = fetchedUser.getPos();
-//        return pos;
-//
-//    }
 
     /**
      * A
@@ -258,6 +236,7 @@ public class UserController {
         }
             return friends;
     }
+
 
 
 

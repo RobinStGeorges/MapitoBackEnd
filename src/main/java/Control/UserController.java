@@ -275,6 +275,7 @@ public class UserController {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
+
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
         ArrayList<Utilisateur> listeFriends=fetchedUser.getFriends();
@@ -296,6 +297,7 @@ public class UserController {
                 GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
                 friends.add(dtoF);
             }
+
         }
             return friends;
     }

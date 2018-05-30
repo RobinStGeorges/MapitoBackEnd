@@ -12,8 +12,6 @@ public class Utilisateur {
 
     @Id
     private ObjectId _id; // always required
-
-
     private String mail;
     private String token;
     private String password;
@@ -107,7 +105,6 @@ public class Utilisateur {
     public void addFriends(Utilisateur friend) {
         this.friends.add(friend);
     }
-
 
 
     public Position getPos() {

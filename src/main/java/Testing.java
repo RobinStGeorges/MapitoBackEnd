@@ -5,6 +5,7 @@ import Model.Utilisateur;
 import com.mongodb.*;
 import org.mongodb.morphia.*;
 import service.MorphiaService;
+import service.SendMail;
 import service.UserDAO;
 import service.UserDaoImpl;
 
@@ -15,12 +16,7 @@ import java.util.ArrayList;
 
 public class Testing {
     public static void main(String[] args) throws UnknownHostException {
-        Utilisateur user = new Utilisateur("mail.gmail@gmail.com","motdepasse","test","test");
-
-
-        ArrayList<Utilisateur>  AL = new ArrayList<Utilisateur>();
-        AL.add(user);
-        System.out.println(AL);
+        SendMail.sendMessage("test","essais number 1","mapitolerance@gmail.com","mapitolerance@gmail.com");
 //         MorphiaService morphiaService;
 //         UserDAO userDAO;
 //

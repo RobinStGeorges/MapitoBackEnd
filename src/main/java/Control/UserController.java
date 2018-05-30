@@ -9,6 +9,7 @@ import Model.Position;
 import Model.Utilisateur;
 
 import service.MorphiaService;
+import service.SendMail;
 import service.UserDAO;
 import service.UserDaoImpl;
 
@@ -270,11 +271,13 @@ public class UserController {
      * return a json with positions of friends & distance from the user
      */
     public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
+
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
         Utilisateur fetchedUser = userDAO.getByToken(token);
+
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
+
         ArrayList<Utilisateur> listeFriends=fetchedUser.getFriends();
 
         if(listeFriends != null){
@@ -294,14 +297,26 @@ public class UserController {
                 GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
                 friends.add(dtoF);
             }
+
         }
             return friends;
     }
-    /*TODO refresh listFriend parcourir liste aller chercher lat long lastlat lastlong valeur remplacer */
+    @PUT
+    @Path("/sendmail/{token}")
+    public void resetmdp(@PathParam("token") String token)throws UnknownHostException{
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
 
 
+        String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n"};
+        String newpassword = "";
+        for(int i=0 ;i < 16 ; i ++){
 
-
-
+            newpassword = newpassword + tablounet[(int)(Math.random() * ( tablounet.length ) ) ];
+        }
+        userDAO.updateByToken("token","password",newpassword);
+        SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"");
+    }
 
 }

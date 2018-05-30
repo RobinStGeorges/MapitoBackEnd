@@ -12,7 +12,6 @@ public class Position {
     private double longitude=0;
     private double lastlatitude=0;
     private double lastlongitude=0;
-
     public Position(){
     }
     public Position(double latitude, double longitude) {

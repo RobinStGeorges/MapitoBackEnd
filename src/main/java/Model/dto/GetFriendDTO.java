@@ -16,6 +16,7 @@ public class GetFriendDTO {
         this.longitude = longitude;
         this.lastlatitude = lastlatitude;
         this.lastlongitude = lastlongitude;
+        this.inTheArea=inTheArea;
     }
 
 }

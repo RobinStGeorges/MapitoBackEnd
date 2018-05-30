@@ -7,7 +7,6 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
 import java.util.ArrayList;
 @Entity("Utilisateur")
-
 @Indexes(@Index(fields = { @Field("mail") }, options = @IndexOptions(unique = true)))
 public class Utilisateur {
 
@@ -16,20 +15,17 @@ public class Utilisateur {
 
 
     private String mail;
-
     private String token;
     private String password;
-
     private ArrayList<Utilisateur> friends = new ArrayList<Utilisateur>();
     @Embedded
     private Position pos;
     private String phoneId;
-
-
     private int cptWrongtoken;
     private String nom;
     private String prenom;
-    private String[] listeAttente; /*TODO faire les methodes correspondantes */
+    @Embedded
+    private ArrayList<Notification> listeNotifications; /*TODO faire les methodes correspondantes */
 
     public Utilisateur(){
 
@@ -130,13 +126,15 @@ public class Utilisateur {
         this.phoneId = phoneId;
     }
 
-    public String[] getListeAttente() {
-        return listeAttente;
+    public void setFriends(ArrayList<Utilisateur> friends) {
+        this.friends = friends;
     }
 
-    public void setListeAttente(String[] listeAttente) {
-        this.listeAttente = listeAttente;
+    public ArrayList<Notification> getListeNotifications() {
+        return listeNotifications;
     }
 
-
+    public void setListeNotifications(ArrayList<Notification> listeNotifications) {
+        this.listeNotifications = listeNotifications;
+    }
 }

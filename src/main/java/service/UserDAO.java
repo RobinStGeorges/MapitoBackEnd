@@ -48,7 +48,7 @@ public interface UserDAO extends DAO<Utilisateur, ObjectId>{
 
     public void updateFriendsByToken(String token,ArrayList<Friend> value);
 
-    public void updateFriendsByEmail(String mail, ArrayList<Utilisateur> value);
+    public void updateFriendsByEmail(String mail, ArrayList<Friend> value);
 
     public void updatePosByToken(String token,Position pos);
 

@@ -329,18 +329,19 @@ public class UserController {
 
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
-        ArrayList<Utilisateur> listeFriends=fetchedUser.getFriends();
+        ArrayList<Friend> listeFriends=fetchedUser.getFriends();
 
         if(listeFriends != null){
-            for (Utilisateur friend : listeFriends){
+            for (Friend friend : listeFriends){
+                Utilisateur poto = userDAO.getByEmail(friend.getMail());
                 String mail=friend.getMail();
-                String prenom=friend.getPrenom();
-                Position pos = friend.getPos();
-                double latitude =  friend.getPos().getLatitude();
-                double longitude = friend.getPos().getLongitude();
-                double lastlat =  friend.getPos().getLastlatitude();
-                double lastlon =  friend.getPos().getLastlongitude();
-                double distance = friend.getPos().distance(fetchedUser.getPos().getLatitude(),fetchedUser.getPos().getLongitude(),latitude,longitude,"K");
+                String prenom=poto.getPrenom();
+                Position pos = poto.getPos();
+                double latitude =  poto.getPos().getLatitude();
+                double longitude = poto.getPos().getLongitude();
+                double lastlat =  poto.getPos().getLastlatitude();
+                double lastlon =  poto.getPos().getLastlongitude();
+                double distance = poto.getPos().distance(fetchedUser.getPos().getLatitude(),fetchedUser.getPos().getLongitude(),latitude,longitude,"K");
                 boolean inTheArea = false;
                 if(distance < 0.3){
                     inTheArea=true;
@@ -356,6 +357,7 @@ public class UserController {
          */
             return friends;
     }
+
     @PUT
     @Path("/resetUserMdp/{mail}")
     public void resetmdp(@PathParam("mail") String mail)throws UnknownHostException{

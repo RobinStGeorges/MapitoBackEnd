@@ -54,17 +54,15 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
     @Override
     public void updateFriendsByToken(String token,ArrayList<Friend> value){
-        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
-        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("friends", value);
-
+        Query<Friend> query = ds.createQuery(Friend.class).field("token").equal(token);
+        UpdateOperations<Friend> ops = ds.createUpdateOperations(Friend.class).set("friends", value);
         ds.update(query, ops);
-
     }
 
     @Override
-    public void updateFriendsByEmail(String mail,ArrayList<Utilisateur> value){
-        Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("mail").equal(mail);
-        UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("friends", value);
+    public void updateFriendsByEmail(String mail,ArrayList<Friend> value){
+        Query<Friend> query = ds.createQuery(Friend.class).field("mail").equal(mail);
+        UpdateOperations<Friend> ops = ds.createUpdateOperations(Friend.class).set("friends", value);
 
         ds.update(query, ops);
 

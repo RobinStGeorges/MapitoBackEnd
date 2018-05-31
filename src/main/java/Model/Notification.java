@@ -8,7 +8,6 @@ import org.mongodb.morphia.annotations.Id;
 public class Notification {
     @Id
     private ObjectId _id; // always required
-
     private String type;
     private String message;
 

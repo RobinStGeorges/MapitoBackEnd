@@ -56,7 +56,6 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     public void updateFriendsByToken(String token,ArrayList<Friend> value){
         Query<Friend> query = ds.createQuery(Friend.class).field("token").equal(token);
         UpdateOperations<Friend> ops = ds.createUpdateOperations(Friend.class).set("friends", value);
-
         ds.update(query, ops);
     }
 

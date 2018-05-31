@@ -204,11 +204,26 @@ public class UserController {
 
         Utilisateur user2Add = userDAO.getByEmail(mail);
 
-        ArrayList<Utilisateur> AL;
+        ArrayList<Friend> AL;
         AL=fetchedUser.getFriends();
 
+        Friend newFriend =new Friend(mail,false);
+
         if (user2Add != null){
-            AL.add(user2Add);
+            Iterator<Friend> iteratorF = AL.iterator();
+            boolean trouve = false;
+            while ( iteratorF.hasNext() ) {
+
+                Friend friend = iteratorF.next();
+
+                if(friend.getMail().equals(mail)){
+
+                    iteratorF.remove();
+                    trouve=true;
+
+                }
+            }
+            AL.add(newFriend);
             userDAO.updateFriendsByToken(token, AL );
             return "200";
         }

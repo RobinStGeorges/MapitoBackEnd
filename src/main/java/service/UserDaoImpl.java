@@ -3,6 +3,7 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Friend;
 import Model.Notification;
 import Model.Position;
 import Model.Utilisateur;
@@ -52,7 +53,7 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     }
 
     @Override
-    public void updateFriendsByToken(String token,ArrayList<Utilisateur> value){
+    public void updateFriendsByToken(String token,ArrayList<Friend> value){
         Query<Utilisateur> query = ds.createQuery(Utilisateur.class).field("token").equal(token);
         UpdateOperations<Utilisateur> ops = ds.createUpdateOperations(Utilisateur.class).set("friends", value);
 

@@ -6,35 +6,20 @@ import org.mongodb.morphia.annotations.Entity;
 public class Friend {
 
     private String mail;
-    private double lat;
-    private double lon;
-    private double oldLat;
-    private double oldLon;
+    private Position pos;
+    private boolean inTheArea;
+    private boolean lastInTheArea;
 
 
     public Friend(String mail, double lat, double lon) {
         this.mail = mail;
-        this.lat = lat;
-        this.lon = lon;
+        this.pos=new Position(lat,lon);
     }
 
 
 
-    public double getLon() {
-        return lon;
-    }
 
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
 
-    public double getLat() {
-        return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
 
     public String getMail() {
         return mail;
@@ -42,5 +27,23 @@ public class Friend {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+
+
+    public boolean isInTheArea() {
+        return inTheArea;
+    }
+
+    public void setInTheArea(boolean inTheArea) {
+        this.inTheArea = inTheArea;
+    }
+
+    public boolean isLastInTheArea() {
+        return lastInTheArea;
+    }
+
+    public void setLastInTheArea(boolean lastInTheArea) {
+        this.lastInTheArea = lastInTheArea;
     }
 }

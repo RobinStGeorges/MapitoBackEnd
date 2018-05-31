@@ -22,6 +22,7 @@ public class Utilisateur {
     private String nom;
     private String prenom;
     private ArrayList<Notification> listeNotifications = new ArrayList<Notification>(); /*TODO faire les methodes correspondantes */
+    private String rgbProfil;
 
     public Utilisateur(){
 
@@ -90,21 +91,11 @@ public class Utilisateur {
         this.password = password;
     }
 
-    //public Map<String,String> getPhoneId() {
- //       return phoneId;
-   // }
 
-    //public void setPhoneId(String phoneId) {
-    //    this.phoneId.put(phoneId,"false");
- //   }
 
     public ArrayList<Friend> getFriends() {
         return friends;
     }
-
-//    public void addFriends(Utilisateur friend) {
-//        this.friends.add(friend);
-//    }
 
 
     public Position getPos() {
@@ -125,5 +116,13 @@ public class Utilisateur {
 
     public void setListeNotifications(ArrayList<Notification> listeNotifications) {
         this.listeNotifications = listeNotifications;
+    }
+
+    public String getRgbProfil() {
+        return rgbProfil;
+    }
+
+    public void setRgbProfil(String rgbProfil) {
+        this.rgbProfil = rgbProfil;
     }
 }

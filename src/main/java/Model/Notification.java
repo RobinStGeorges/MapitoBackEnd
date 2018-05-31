@@ -9,23 +9,23 @@ public class Notification {
     @Id
     private ObjectId _id; // always required
 
-    private String titre;
+    private String type;
     private String message;
 
     public Notification(String titre, String contenue) {
-        this.titre = titre;
+        this.type = titre;
         this.message = contenue;
     }
 
     public Notification() {
     }
 
-    public String getTitre() {
-        return titre;
+    public String getType() {
+        return type;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getMessage() {

@@ -89,7 +89,7 @@ public class FriendsController {
         ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
 
         for(Notification notif : listeNotification){
-            switch (notif.getTitre()) {
+            switch (notif.getType()) {
                 case "addFriend":
                     String body = notif.getMessage();
                     String[] tabBody = body.split("---");

@@ -2,7 +2,6 @@ package Control;
 
 import Model.*;
 import Model.dto.GetFriendDTO;
-import com.google.gson.Gson;
 
 import service.MorphiaService;
 import service.SendMail;
@@ -11,7 +10,6 @@ import service.UserDaoImpl;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -304,7 +302,7 @@ public class UserController {
         boolean trouve = false;
         while ( iterator.hasNext() ) {
             Notification notif = iterator.next();
-            if(notif.getTitre().equals(titre)){
+            if(notif.getType().equals(titre)){
                 iterator.remove();
                 trouve=true;
             }

@@ -207,7 +207,7 @@ public class UserController {
         ArrayList<Friend> AL;
         AL=fetchedUser.getFriends();
 
-        Friend newFriend =new Friend(mail,false);
+        Friend newFriend =new Friend(mail,false,false);
 
         if (user2Add != null){
             Iterator<Friend> iteratorF = AL.iterator();
@@ -270,18 +270,18 @@ public class UserController {
     }
 
     @PUT
-    @Path("/sendProxNotif/{token}/{mail}")
+    @Path("/sendProxNotif/{token}/{mail}/{contenu}")
     /**
      * R
      * gerer les codes erreurs
      */
-    public String sendUserProxNotif(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+    public String sendUserProxNotif(@PathParam("token")String token,@PathParam("mail")String mail,@PathParam("contenu")String contenu) throws UnknownHostException {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
-
-        Notification notif = new Notification("Prox","L'utilisateur "+mail+" se trouve près de vous !");
+        ArrayList<Friend> listeFriends = fetchedUser.getFriends();
+        Notification notif = new Notification("Prox","L'utilisateur "+mail+" "+contenu);
 
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(token,listeNotifs);
@@ -330,7 +330,7 @@ public class UserController {
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
         ArrayList<Friend> listeFriends=fetchedUser.getFriends();
-
+        boolean tempLITA = false;
         if(listeFriends != null){
             for (Friend friend : listeFriends){
                 Utilisateur poto = userDAO.getByEmail(friend.getMail());
@@ -343,19 +343,40 @@ public class UserController {
                 double lastlon =  poto.getPos().getLastlongitude();
                 double distance = poto.getPos().distance(fetchedUser.getPos().getLatitude(),fetchedUser.getPos().getLongitude(),latitude,longitude,"K");
                 boolean inTheArea = false;
+
                 if(distance < 0.3){
                     inTheArea=true;
+                    tempLITA=true;
                 }
-                GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
+                else{
+                    inTheArea=false;
+                    tempLITA=false;
+                }
+                boolean lastInTheArea = friend.isLastInArea();
+
+                GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,lastInTheArea,latitude,longitude,lastlat,lastlon);
+                friend.setLastInArea(tempLITA);
+                friend.setInTheArea(inTheArea);
 
                 friends.add(dtoF);
             }
-
         }
+        userDAO.updateFriendsByToken(token,listeFriends);
         /**
          * TODO enregistrer inthearea et lastinthearea !!
          */
             return friends;
+    }
+
+    @PUT
+    @Path("deleteUser/{token}")
+    public void deleteUser(@PathParam("token")String token) throws UnknownHostException {
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+        userDAO.deleteByToken(token);
+
     }
 
     @PUT

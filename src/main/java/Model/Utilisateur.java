@@ -35,6 +35,7 @@ public class Utilisateur {
         this.nom=nom;
         this.prenom=prenom;
         this.pos=new Position();
+//        this.friends.add(new Friend("plopplop",false));
 //        listeNotifications.add(new Notification("Depart","testesttest"));
 
     }

@@ -3,7 +3,6 @@ package Control;
 import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
-import Model.dto.GetFriendDTO;
 import service.MorphiaService;
 import service.UserDAO;
 import service.UserDaoImpl;
@@ -92,14 +91,14 @@ public class FriendsController {
         for(Notification notif : listeNotification){
             switch (notif.getTitre()) {
                 case "addFriend":
-                    String body = notif.getContenue();
+                    String body = notif.getMessage();
                     String[] tabBody = body.split("---");
                     String mailAAccepter= tabBody[1];
 
                     Utilisateur userRequesting = userDAO.getByEmail(mailAAccepter);
 
-                    Friend fFetched = new Friend(fetchedUser.getMail(),false);
-                    Friend fUR = new Friend(userRequesting.getMail(),false);
+                    Friend fFetched = new Friend(fetchedUser.getMail(),false,false);
+                    Friend fUR = new Friend(userRequesting.getMail(),false,false);
                     userRequesting.getFriends().add(fFetched);
                     fetchedUser.getFriends().add(fUR);
 
@@ -112,6 +111,41 @@ public class FriendsController {
 
 
     }
+
+    @PUT
+    @Path("/updateLIA/{token}/{mail}")
+    public void updateLastInArea(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+        MorphiaService morphiaService = new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        /*Current user*/
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        ArrayList<Friend> listeFriends = fetchedUser.getFriends();
+
+
+//        Iterator<Friend> iterator = listeFriends.iterator();
+//        boolean trouve = false;
+//        while ( iterator.hasNext() ) {
+//            Friend user = iterator.next();
+//            if(user.getMail().equals(mail)){
+//                trouve=true;
+//                switch(""+user.isInTheArea()){
+//                    case "true":
+//                        user.setLastInArea(true);
+//                        break;
+//                    case "false":
+//                        user.setLastInArea(true);
+//                        break;
+//                }
+//
+//            }
+//        }
+
+
+
+
+    }
+
     @PUT
     @Path("deleteFriend/{token}/{mail}")
     /**
@@ -122,7 +156,6 @@ public class FriendsController {
         MorphiaService morphiaService = new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
-        System.out.println("1");
 /*Current user*/
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();

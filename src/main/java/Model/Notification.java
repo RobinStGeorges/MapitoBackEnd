@@ -10,11 +10,11 @@ public class Notification {
     private ObjectId _id; // always required
 
     private String titre;
-    private String contenue;
+    private String message;
 
     public Notification(String titre, String contenue) {
         this.titre = titre;
-        this.contenue = contenue;
+        this.message = contenue;
     }
 
     public Notification() {
@@ -28,11 +28,11 @@ public class Notification {
         this.titre = titre;
     }
 
-    public String getContenue() {
-        return contenue;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContenue(String contenue) {
-        this.contenue = contenue;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

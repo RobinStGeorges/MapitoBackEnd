@@ -8,16 +8,18 @@ public class GetFriendDTO {
     private double lastlatitude;
     private double lastlongitude;
     private boolean inTheArea;
+    private boolean lastInTheArea;
 
-    public GetFriendDTO(String mail,String prenom,boolean inTheArea, double latitude, double longitude, double lastlatitude, double lastlongitude) {
+    public GetFriendDTO(String mail,String prenom,boolean inTheArea,boolean lastInTheArea, double latitude, double longitude, double lastlatitude, double lastlongitude) {
         this.mail = mail;
         this.prenom = prenom;
-        this.inTheArea = inTheArea;
         this.latitude = latitude;
         this.longitude = longitude;
         this.lastlatitude = lastlatitude;
         this.lastlongitude = lastlongitude;
         this.inTheArea=inTheArea;
+        this.lastInTheArea=lastInTheArea;
+
     }
 
 }

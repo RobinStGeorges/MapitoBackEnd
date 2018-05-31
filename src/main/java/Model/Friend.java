@@ -7,9 +7,11 @@ public class Friend {
 
     private String mail;
     private boolean lastInArea = false;
+    private boolean inTheArea = false;
 
-    public Friend(String mail, boolean lastInArea) {
+    public Friend(String mail, boolean inTheArea,boolean lastInArea) {
         this.mail = mail;
+        this.inTheArea = inTheArea;
         this.lastInArea = lastInArea;
 
     }
@@ -31,5 +33,13 @@ public class Friend {
 
     public void setLastInArea(boolean lastInArea) {
         this.lastInArea = lastInArea;
+    }
+
+    public boolean isInTheArea() {
+        return inTheArea;
+    }
+
+    public void setInTheArea(boolean inTheArea) {
+        this.inTheArea = inTheArea;
     }
 }

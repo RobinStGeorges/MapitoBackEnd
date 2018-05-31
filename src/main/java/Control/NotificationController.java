@@ -25,5 +25,9 @@ public class NotificationController {
         Utilisateur fetchedUser = userDAO.getByToken(token);
 
         ArrayList<Notification> listeFriendRequest = new ArrayList<Notification>();
+
+        
+
+        return listeFriendRequest;
     }
 }

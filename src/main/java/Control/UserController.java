@@ -180,6 +180,9 @@ public class UserController {
             case"prenom":
                 result=fetchedUser.getPrenom();
                 break;
+            case"password":
+                result=fetchedUser.getPassword();
+                break;
             default:
                 result="error";
                 break;

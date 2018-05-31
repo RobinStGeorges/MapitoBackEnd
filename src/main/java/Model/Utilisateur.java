@@ -114,9 +114,7 @@ public class Utilisateur {
         return listeNotifications;
     }
 
-    public void setListeNotifications(ArrayList<Notification> listeNotifications) {
-        this.listeNotifications = listeNotifications;
-    }
+    public void setListeNotifications(ArrayList<Notification> listeNotifications) { this.listeNotifications = listeNotifications; }
 
     public String getRgbProfil() {
         return rgbProfil;
@@ -124,5 +122,15 @@ public class Utilisateur {
 
     public void setRgbProfil(String rgbProfil) {
         this.rgbProfil = rgbProfil;
+    }
+
+    public ArrayList<Notification> getFriendNotif(){
+        ArrayList<Notification> requestpoto = new ArrayList<Notification>();
+        for (Notification i : listeNotifications){
+            if( i.getType() == "3"){
+                requestpoto.add(i);
+            }
+        }
+        return requestpoto;
     }
 }

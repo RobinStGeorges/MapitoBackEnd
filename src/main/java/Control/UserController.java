@@ -260,8 +260,48 @@ public class UserController {
 
     @PUT
     @Path("/sendProxNotif/{token}/{mail}")
-    public void sendUserProxNotif(@PathParam("token")String token,@PathParam("mail")String mail){
-        
+    /**
+     * R
+     * gerer les codes erreurs
+     */
+    public String sendUserProxNotif(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
+
+        Notification notif = new Notification("Prox","L'utilisateur "+mail+" se trouve près de vous !");
+
+        listeNotifs.add(notif);
+        userDAO.updateNotifsByToken(token,listeNotifs);
+        return "200";
+    }
+
+    @PUT
+    @Path("/deleteNotif/{token}/{titre}")
+    /**
+     * R
+     * delete notif with titre   gerer les codes erreurs
+     */
+    public String deleteUserNotif(@PathParam("token")String token,@PathParam("titre")String titre) throws UnknownHostException {
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
+
+        Iterator<Notification> iterator = listeNotifs.iterator();
+        boolean trouve = false;
+        while ( iterator.hasNext() ) {
+            Notification notif = iterator.next();
+            if(notif.getTitre().equals(titre)){
+                iterator.remove();
+                trouve=true;
+            }
+        }
+        userDAO.updateNotifsByToken(token,listeNotifs);
+
+        return "200";
+
     }
 
     @GET
@@ -295,28 +335,36 @@ public class UserController {
                     inTheArea=true;
                 }
                 GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,latitude,longitude,lastlat,lastlon);
+
                 friends.add(dtoF);
             }
 
         }
+        /**
+         * TODO enregistrer inthearea et lastinthearea !!
+         */
             return friends;
     }
     @PUT
-    @Path("/sendmail/{token}")
-    public void resetmdp(@PathParam("token") String token)throws UnknownHostException{
+    @Path("/resetUserMdp/{mail}")
+    public void resetmdp(@PathParam("mail") String mail)throws UnknownHostException{
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByToken(token);
-
+        Utilisateur fetchedUser = userDAO.getByEmail(mail);
+        System.out.println("1");
 
         String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n"};
         String newpassword = "";
         for(int i=0 ;i < 16 ; i ++){
 
             newpassword = newpassword + tablounet[(int)(Math.random() * ( tablounet.length ) ) ];
+            System.out.println(i);
+            System.out.println(newpassword);
         }
-        userDAO.updateByToken("token","password",newpassword);
-        SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"");
+        System.out.println("2");
+        userDAO.updateByEmail(mail,"password",newpassword);
+        System.out.println("3");
+        SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"mapitoLerance@gmail.com");
     }
 
 }

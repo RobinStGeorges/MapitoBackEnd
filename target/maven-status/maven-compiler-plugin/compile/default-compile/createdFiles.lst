@@ -1,21 +1,2 @@
-conf\exception\RuntimeExceptionMapper.class
-Model\Friend.class
 conf\App.class
-Model\dto\GetFriendDTO.class
-service\UserDaoImpl.class
-service\UserDAO.class
 Testing.class
-<<<<<<< HEAD
-=======
-Model\Notification.class
-Model\FriendRequest.class
->>>>>>> a34b9635e20cce3a0db4a5876109adba7f7729cf
-conf\filter\TestEndpoint.class
-Control\FriendsController.class
-Model\Utilisateur.class
-Model\TokenTournament.class
-Control\UserController.class
-conf\filter\GsonProvider.class
-service\MorphiaService.class
-Model\dto\TokenDTO.class
-Model\Position.class

@@ -1,12 +1,8 @@
 package Control;
 
-import Model.Notification;
-import Model.TokenTournament;
+import Model.*;
 import Model.dto.GetFriendDTO;
 import com.google.gson.Gson;
-
-import Model.Position;
-import Model.Utilisateur;
 
 import service.MorphiaService;
 import service.SendMail;
@@ -208,11 +204,26 @@ public class UserController {
 
         Utilisateur user2Add = userDAO.getByEmail(mail);
 
-        ArrayList<Utilisateur> AL;
+        ArrayList<Friend> AL;
         AL=fetchedUser.getFriends();
 
+        Friend newFriend =new Friend(mail,false);
+
         if (user2Add != null){
-            AL.add(user2Add);
+            Iterator<Friend> iteratorF = AL.iterator();
+            boolean trouve = false;
+            while ( iteratorF.hasNext() ) {
+
+                Friend friend = iteratorF.next();
+
+                if(friend.getMail().equals(mail)){
+
+                    iteratorF.remove();
+                    trouve=true;
+
+                }
+            }
+            AL.add(newFriend);
             userDAO.updateFriendsByToken(token, AL );
             return "200";
         }

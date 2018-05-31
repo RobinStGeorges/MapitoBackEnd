@@ -1,5 +1,6 @@
 package Control;
 
+import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
 import Model.dto.GetFriendDTO;
@@ -41,12 +42,37 @@ public class FriendsController {
 
         Utilisateur receivingUser = userDAO.getByEmail(mail);
 
+        ArrayList<Friend> poto = fetchedUser.getFriends();
+        Iterator<Friend> iterator = poto.iterator();
+        while ( iterator.hasNext() ) {
+            Friend user = iterator.next();
+            if (user.getMail().equals(mail)) {
+                return "400";
+            }
+        }
+
         String mailUser= fetchedUser.getMail();
         Notification notif = new Notification("addFriend","---"+mailUser+"--- want to add you ! ");
 
         receivingUser.getListeNotifications().add(notif);
 
         return "200";
+    }
+    @GET
+    @Path("whereAreYou/{token}/{mail}")
+    public boolean whereAreYou(@PathParam("token")String token,@PathParam("mail")String mail)throws UnknownHostException{
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+        ArrayList<Friend> poto = fetchedUser.getFriends();
+        Iterator<Friend> iterator = poto.iterator();
+        while ( iterator.hasNext() ) {
+            Friend user = iterator.next();
+            if (user.getMail().equals(mail)) {
+                return user.isLastInArea();
+            }
+        }return false;
     }
 
     @PUT
@@ -96,12 +122,12 @@ public class FriendsController {
         System.out.println("1");
 /*Current user*/
         Utilisateur fetchedUser = userDAO.getByToken(token);
-        ArrayList<Utilisateur> listeFriends = fetchedUser.getFriends();
+        ArrayList<Friend> listeFriends = fetchedUser.getFriends();
 
-        Iterator<Utilisateur> iterator = listeFriends.iterator();
+        Iterator<Friend> iterator = listeFriends.iterator();
         boolean trouve2 = false;
         while ( iterator.hasNext() ) {
-            Utilisateur user = iterator.next();
+            Friend user = iterator.next();
             if(user.getMail().equals(mail)){
                 iterator.remove();
                 System.out.println("2");
@@ -112,11 +138,11 @@ public class FriendsController {
         System.out.println("3");//last seen
         /*deleted user*/
         Utilisateur requestingUser = userDAO.getByEmail(mail);
-        ArrayList<Utilisateur> listeRequestedUserFriends = requestingUser.getFriends();
-        Iterator<Utilisateur> iterator2 = listeRequestedUserFriends.iterator();
+        ArrayList<Friend> listeRequestedUserFriends = requestingUser.getFriends();
+        Iterator<Friend> iterator2 = listeRequestedUserFriends.iterator();
         boolean trouve = false;
         while ( iterator2.hasNext() ) {
-            Utilisateur user = iterator2.next();
+            Friend user = iterator2.next();
             if(user.getMail().equals(fetchedUser.getMail())){
                 iterator2.remove();
                 trouve=true;

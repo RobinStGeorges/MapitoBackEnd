@@ -15,10 +15,9 @@ public class Utilisateur {
     private String mail;
     private String token;
     private String password;
-    private ArrayList<Utilisateur> friends = new ArrayList<Utilisateur>();
+    private ArrayList<Friend> friends = new ArrayList<Friend>();
     @Embedded
     private Position pos;
-    private String phoneId;
     private int cptWrongtoken;
     private String nom;
     private String prenom;
@@ -98,13 +97,13 @@ public class Utilisateur {
     //    this.phoneId.put(phoneId,"false");
  //   }
 
-    public ArrayList<Utilisateur> getFriends() {
+    public ArrayList<Friend> getFriends() {
         return friends;
     }
 
-    public void addFriends(Utilisateur friend) {
-        this.friends.add(friend);
-    }
+//    public void addFriends(Utilisateur friend) {
+//        this.friends.add(friend);
+//    }
 
 
     public Position getPos() {
@@ -115,15 +114,7 @@ public class Utilisateur {
         this.pos = pos;
     }
 
-    public String getPhoneId() {
-        return phoneId;
-    }
-
-    public void setPhoneId(String phoneId) {
-        this.phoneId = phoneId;
-    }
-
-    public void setFriends(ArrayList<Utilisateur> friends) {
+    public void setFriends(ArrayList<Friend> friends) {
         this.friends = friends;
     }
 

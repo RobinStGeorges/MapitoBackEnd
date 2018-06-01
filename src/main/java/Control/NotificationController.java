@@ -28,4 +28,17 @@ public class NotificationController {
 
         return listeFriendRequest;
     }
+
+    @GET@
+            Path("/getNotifsNoFriendRequest/{token}")
+    public ArrayList<Notification> getNotifsNoFriendRequest(@PathParam("token")String token) throws UnknownHostException {
+        MorphiaService morphiaService = new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+        ArrayList<Notification> NotifsNoFriend = fetchedUser.getNotifNoFriend();
+
+        return NotifsNoFriend;
+    }
 }

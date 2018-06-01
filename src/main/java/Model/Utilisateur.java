@@ -133,4 +133,14 @@ public class Utilisateur {
         }
         return requestpoto;
     }
+
+    public ArrayList<Notification> getNotifNoFriend(){
+        ArrayList<Notification> requestpoto = new ArrayList<Notification>();
+        for (Notification i : listeNotifications){
+            if( i.getType() != 3){
+                requestpoto.add(i);
+            }
+        }
+        return requestpoto;
+    }
 }

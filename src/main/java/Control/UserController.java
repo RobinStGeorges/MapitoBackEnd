@@ -335,16 +335,11 @@ public class UserController {
         if(listeFriends != null){
             for (Friend friend : listeFriends){
                 Utilisateur poto = userDAO.getByEmail(friend.getMail());
-                String mail=friend.getMail();
-                String prenom=poto.getPrenom();
-                Position pos = poto.getPos();
-                double latitude =  poto.getPos().getLatitude();
-                double longitude = poto.getPos().getLongitude();
-                double lastlat =  poto.getPos().getLastlatitude();
-                double lastlon =  poto.getPos().getLastlongitude();
-                double distance = poto.getPos().distance(fetchedUser.getPos().getLatitude(),fetchedUser.getPos().getLongitude(),latitude,longitude,"K");
+                double distance = poto.getPos().distance(
+                        fetchedUser.getPos().getLatitude(),
+                        fetchedUser.getPos().getLongitude(),
+                        poto.getPos().getLatitude(),poto.getPos().getLongitude(),"K");
                 boolean inTheArea;
-
                 if(distance < 0.5){
                     inTheArea=true;
                     tempLITA=true;
@@ -355,7 +350,15 @@ public class UserController {
                 }
                 boolean lastInTheArea = friend.isLastInArea();
 
-                GetFriendDTO dtoF = new GetFriendDTO( mail, prenom, inTheArea,lastInTheArea,latitude,longitude,lastlat,lastlon);
+                GetFriendDTO dtoF = new GetFriendDTO(
+                        friend.getMail(),
+                        poto.getPrenom(),
+                        inTheArea,
+                        lastInTheArea,
+                        poto.getPos().getLatitude(),
+                        poto.getPos().getLongitude(),
+                        poto.getPos().getLastlatitude(),
+                        poto.getPos().getLastlongitude());
                 friend.setLastInArea(tempLITA);
                 friend.setInTheArea(inTheArea);
 
@@ -391,14 +394,9 @@ public class UserController {
         String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n"};
         String newpassword = "";
         for(int i=0 ;i < 16 ; i ++){
-
             newpassword = newpassword + tablounet[(int)(Math.random() * ( tablounet.length ) ) ];
-            System.out.println(i);
-            System.out.println(newpassword);
         }
-        System.out.println("2");
         userDAO.updateByEmail(mail,"password",newpassword);
-        System.out.println("3");
         SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"mapitoLerance@gmail.com");
     }
 

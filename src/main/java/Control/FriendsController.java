@@ -3,11 +3,13 @@ package Control;
 import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
+import Model.dto.GetFriendDTO;
 import service.MorphiaService;
 import service.UserDAO;
 import service.UserDaoImpl;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +34,7 @@ public class FriendsController {
      * R
      * send a friend resquest using the mail a the friend
      */
-    public String newFriendRequest(@PathParam("token") String token,@PathParam("mail") String mail) throws UnknownHostException {
+    public Response newFriendRequest(@PathParam("token") String token, @PathParam("mail") String mail) throws UnknownHostException {
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -46,7 +48,7 @@ public class FriendsController {
         while ( iterator.hasNext() ) {
             Friend user = iterator.next();
             if (user.getMail().equals(mail)) {
-                return "400";
+                return Response.status(400).build();
             }
         }
 
@@ -55,8 +57,9 @@ public class FriendsController {
 
         receivingUser.getListeNotifications().add(notif);
 
-        return "200";
+        return Response.ok().build();
     }
+
     @GET
     @Path("whereAreYou/{token}/{mail}")
     public boolean whereAreYou(@PathParam("token")String token,@PathParam("mail")String mail)throws UnknownHostException{
@@ -194,4 +197,110 @@ public class FriendsController {
             return "200";
         }
     }
+
+    @GET
+    @Path("/getFriends/{token}")
+    /**
+     * A
+     * return a json with positions of friends & distance from the user
+     */
+    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
+
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+        ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
+
+        ArrayList<Friend> listeFriends=fetchedUser.getFriends();
+        boolean tempLITA;
+        if(listeFriends != null){
+            for (Friend friend : listeFriends){
+                Utilisateur poto = userDAO.getByEmail(friend.getMail());
+                double distance = poto.getPos().distance(
+                        fetchedUser.getPos().getLatitude(),
+                        fetchedUser.getPos().getLongitude(),
+                        poto.getPos().getLatitude(),
+                        poto.getPos().getLongitude(),
+                        "K"
+                );
+                boolean inTheArea;
+                if(distance < 0.5){
+                    inTheArea=true;
+                    tempLITA=true;
+                }
+                else{
+                    inTheArea=false;
+                    tempLITA=false;
+                }
+                boolean lastInTheArea = friend.isLastInArea();
+
+                GetFriendDTO dtoF = new GetFriendDTO(
+                        friend.getMail(),
+                        poto.getPrenom(),
+                        inTheArea,
+                        lastInTheArea,
+                        poto.getPos().getLatitude(),
+                        poto.getPos().getLongitude(),
+                        poto.getPos().getLastlatitude(),
+                        poto.getPos().getLastlongitude()
+                );
+                friend.setLastInArea(tempLITA);
+                friend.setInTheArea(inTheArea);
+
+                friends.add(dtoF);
+            }
+        }
+        userDAO.updateFriendsByToken(token,listeFriends);
+        /**
+         * TODO enregistrer inthearea et lastinthearea !!
+         */
+        return friends;
+    }
+
+    @PUT
+    @Path("addFriend/{token}/{mail}")
+    /**
+     * R
+     * add the friend using is mail to the user list
+     */
+    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+        MorphiaService morphiaService= new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+        Utilisateur user2Add = userDAO.getByEmail(mail);
+
+        ArrayList<Friend> AL;
+        AL=fetchedUser.getFriends();
+
+        Friend newFriend =new Friend(mail,false,false);
+
+        if (user2Add != null){
+            Iterator<Friend> iteratorF = AL.iterator();
+            boolean trouve = false;
+            while ( iteratorF.hasNext() ) {
+
+                Friend friend = iteratorF.next();
+
+                if(friend.getMail().equals(mail)){
+
+                    iteratorF.remove();
+                    trouve=true;
+
+                }
+            }
+            AL.add(newFriend);
+            userDAO.updateFriendsByToken(token, AL );
+            return "200";
+        }
+        else{
+            return "400";
+        }
+
+
+    }
+
+
 }

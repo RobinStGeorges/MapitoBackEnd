@@ -15,7 +15,7 @@ public class DateNotification {
     private String minutes;
     private String secondes;
 
-    public DateNotification(String an, String mois, String jour, String heure, String minutes, String secondes) {
+    public DateNotification() {
         String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         Calendar cal = Calendar.getInstance();
@@ -29,5 +29,5 @@ public class DateNotification {
         this.secondes = tabDate[5];
     }
 
-    
+
 }

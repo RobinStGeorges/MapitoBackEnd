@@ -9,6 +9,7 @@ C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\GetFriendDTO.java
 C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\Position.java
 C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\Friend.java
 C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Control\UserController.java
+C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\SendNotifDTO.java
 C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Control\NotificationController.java
 C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\service\MorphiaService.java
 C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\TokenDTO.java

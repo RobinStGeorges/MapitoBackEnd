@@ -109,14 +109,14 @@ public class UserController {
      * return the value fro the field requested of the user using token
      */
     @GET
-    @Path("/field/{token}/{field}")
-    public Response getUserField (@PathParam("token") String token, @PathParam("field") String field) {
-        Utilisateur fetchedUser = userDAO.getByToken(token);
+    @Path("/field")
+    public Response getUserField (UserDTO userDto) {
+        Utilisateur fetchedUser = userDAO.getByToken(userDto.token);
         if (fetchedUser == null) {
             return Response.status(401).build();
         }
         String result;
-        switch (field)
+        switch (userDto.field)
         {
             case "token":
                 result=fetchedUser.getToken();
@@ -136,7 +136,7 @@ public class UserController {
             default:
                 return Response.status(404).build();
         }
-        return Response.ok(new Gson().toJson(new UpdateUserDTO(token, field, result))).build();
+        return Response.ok(new Gson().toJson(new UpdateUserDTO(userDto.token, userDto.field, result))).build();
     }
 
 
@@ -144,73 +144,69 @@ public class UserController {
 
 
 
-
-    @PUT
-    @Path("/sendProxNotif/{token}/{mail}/{contenu}")
     /**
      * R
      * gerer les codes erreurs
      */
-    public String sendUserProxNotif(@PathParam("token")String token,@PathParam("mail")String mail,@PathParam("contenu")String contenu) throws UnknownHostException {
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByToken(token);
+    @PUT
+    @Path("/sendProxNotif")
+    public Response sendUserProxNotif(SendNotifDTO sendNotifDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(sendNotifDTO.token);
+        if(fetchedUser == null){
+            return Response.status(401).build();
+        }
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-        Notification notif = new Notification(1,"L'utilisateur "+mail+" "+contenu);
+        Notification notif = new Notification(1,"L'utilisateur "+sendNotifDTO.mail+" "+sendNotifDTO.contenu);
 
         listeNotifs.add(notif);
-        userDAO.updateNotifsByToken(token,listeNotifs);
-        return "200";
+        userDAO.updateNotifsByToken(sendNotifDTO.token,listeNotifs);
+        return Response.ok().build();
     }
-
-    @PUT
-    @Path("/deleteNotif/{token}/{titre}")
     /**
      * R
      * delete notif with titre   gerer les codes erreurs
      */
-    public String deleteUserNotif(@PathParam("token")String token,@PathParam("titre")int titre) throws UnknownHostException {
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+    @PUT
+    @Path("/deleteNotif/{token}/{titre}")
+    public Response deleteUserNotif(@PathParam("token")String token,@PathParam("titre")int titre){
         Utilisateur fetchedUser = userDAO.getByToken(token);
+        if(fetchedUser == null){
+            return Response.status(401).build();
+        }
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
-
         Iterator<Notification> iterator = listeNotifs.iterator();
-        boolean trouve = false;
-        while ( iterator.hasNext() ) {
-            Notification notif = iterator.next();
-            if(notif.getType()==(titre)){
-                iterator.remove();
-                trouve=true;
+
+        for(Notification not : listeNotifs){
+            if(not.getType()==(titre)){
+                listeNotifs.remove(not);
+                userDAO.updateNotifsByToken(token,listeNotifs);
+                return Response.ok().build();
             }
         }
-        userDAO.updateNotifsByToken(token,listeNotifs);
-
-        return "200";
-
+        return Response.status(404).build();
     }
 
 
 
     @PUT
     @Path("deleteUser/{token}")
-    public void deleteUser(@PathParam("token")String token) throws UnknownHostException {
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByToken(token);
-
-        userDAO.deleteByToken(token);
-
+    public Response deleteUser(TokenDTO tokenDto) throws UnknownHostException {
+        Utilisateur fetchedUser = userDAO.getByToken(tokenDto.token);
+        if(fetchedUser == null){
+            return Response.status(401).build();
+        }
+        userDAO.deleteByToken(tokenDto.token);
+        return Response.ok().build();
     }
 
     @PUT
     @Path("/resetUserMdp/{mail}")
-    public void resetmdp(@PathParam("mail") String mail)throws UnknownHostException{
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+    public Response resetmdp(@PathParam("mail") String mail)throws UnknownHostException{
         Utilisateur fetchedUser = userDAO.getByEmail(mail);
-        System.out.println("1");
+        if(fetchedUser == null){
+            return Response.status(401).build();
+        }
 
         String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n"};
         String newpassword = "";
@@ -219,6 +215,7 @@ public class UserController {
         }
         userDAO.updateByEmail(mail,"password",newpassword);
         SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"mapitoLerance@gmail.com");
+        return Response.ok().build();
     }
 
 }

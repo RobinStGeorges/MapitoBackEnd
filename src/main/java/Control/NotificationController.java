@@ -71,7 +71,7 @@ public class NotificationController {
         ArrayList<Notification> listeNotifs;
         listeNotifs=fetchedUser.getListeNotifications();
 
-        Notification notif = new Notification(3,"---"+"unMailrandom@gmail.com"+"--- want to add you ! ");
+        Notification notif = new Notification(3,"---"+mail+"--- want to add you ! ");
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(token,listeNotifs);
         return "200";

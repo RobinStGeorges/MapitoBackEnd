@@ -18,15 +18,7 @@ import java.util.Iterator;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/friends/")
 public class FriendsController {
-    /**
-     * A
-     */
-    @GET
-    @Path("/test")
-    @Produces("text/plain")
-    public String test(){
-        return "Hello world";
-    }
+
 
     @PUT
     @Path("friendRequest/{token}/{mail}")

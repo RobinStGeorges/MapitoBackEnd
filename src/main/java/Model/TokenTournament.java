@@ -18,8 +18,10 @@ public class TokenTournament {
         if(token == user.getToken())
             return 1;
 
+
         if(user.getCptWrongtoken()>=10) {
             return 3;
+
         }
         MorphiaService morphiaService = new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());

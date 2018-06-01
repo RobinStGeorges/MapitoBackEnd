@@ -1,6 +1,7 @@
 package service;
 
 
+import Model.*;
 import com.mongodb.MongoClient;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -17,7 +18,9 @@ public class MorphiaService {
     private Morphia morphia;
     private Datastore datastore;
 
-    public MorphiaService() {
+
+    public MorphiaService()  {
+
 
         // we use MongoClient to connect the local host (127.0.0.1)
         // (assuming this is where your mongodb instance is running)
@@ -25,7 +28,13 @@ public class MorphiaService {
         MongoClient mongoClient = new MongoClient("127.0.0.1:27017");
 
         //create a new morphia instance
-        this.morphia = new Morphia();
+        this.morphia = new Morphia().map(
+                Utilisateur.class,
+                Position.class,
+                Notification.class,
+                Friend.class,
+                DateNotification.class
+        );
         String databaseName = "mapito";
         this.datastore = morphia.createDatastore(mongoClient, databaseName);
     }

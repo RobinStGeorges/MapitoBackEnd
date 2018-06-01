@@ -12,10 +12,12 @@ public class Notification {
 
     private int type;
     private String message;
+    private DateNotification dateNotif;
 
     public Notification(int titre, String contenue) {
         this.type = titre;
         this.message = contenue;
+        this.dateNotif=new DateNotification();
     }
 
     public Notification() {

@@ -15,6 +15,11 @@ service\UserDaoImpl.class
 Model\DateNotification.class
 Control\NotificationController.class
 Model\dto\UpdatePosDTO.class
+<<<<<<< HEAD
+=======
+Model\Notification.class
+service\SendMail.class
+>>>>>>> robin
 conf\filter\TestEndpoint.class
 Control\FriendsController.class
 Model\dto\UserDTO.class

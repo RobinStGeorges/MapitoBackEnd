@@ -45,6 +45,8 @@ public class UserController {
     }
 
     @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(UserDTO dto) {
         /*verification si un utilisateur possède dejà ce mail */
         Utilisateur fetchedUser = userDAO.getByEmail(dto.mail);
@@ -138,6 +140,75 @@ public class UserController {
         }
         return Response.ok(new Gson().toJson(new UpdateUserDTO(userDto.token, userDto.field, result))).build();
     }
+
+
+    /**
+          * R
+          */
+    @POST
+    @Path("/new/{mail}/{mdp}/{nom}/{prenom}")
+    public int newUser(@PathParam("mail") String mail, @PathParam("mdp") String mdp, @PathParam("nom") String nom,@PathParam("prenom") String prenom ) throws UnknownHostException {
+        MorphiaService morphiaService;
+        UserDAO userDAO;
+
+        morphiaService = new MorphiaService();
+        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        /*verification si un utilisateur possède dejà ce mail */
+        Utilisateur fetchedUser = userDAO.getByEmail(mail);
+        if (fetchedUser != null){
+            return 500;
+        }
+
+        Utilisateur user = new Utilisateur(mail,mdp,nom,prenom);
+        userDAO.save(user);
+        return 200;
+        /*TODO gerer les code erreurs400   */
+
+
+    }
+
+    @PUT
+    @Path("addFriend/{token}/{mail}")
+    /**
+     * R
+     * add the friend using its mail to the user list
+     */
+    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+        MorphiaService morphiaService = new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+        Utilisateur user2Add = userDAO.getByEmail(mail);
+
+        ArrayList<Friend> AL;
+        AL = fetchedUser.getFriends();
+
+        Friend newFriend = new Friend(mail, false, false);
+
+        if (user2Add != null) {
+            Iterator<Friend> iteratorF = AL.iterator();
+            boolean trouve = false;
+            while (iteratorF.hasNext()) {
+
+                Friend friend = iteratorF.next();
+
+                if (friend.getMail().equals(mail)) {
+
+                    iteratorF.remove();
+                    trouve = true;
+
+                }
+            }
+            AL.add(newFriend);
+            userDAO.updateFriendsByToken(token, AL);
+            return "200";
+        } else {
+            return "400";
+        }
+
+    }
+
 
 
 

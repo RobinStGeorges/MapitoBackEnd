@@ -1,10 +1,15 @@
 package Model;
 
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+
 @Entity("Friend")
 public class Friend {
 
+    @Id
+    private ObjectId _id; // always required
     private String mail;
     private boolean lastInArea = false;
     private boolean inTheArea = false;

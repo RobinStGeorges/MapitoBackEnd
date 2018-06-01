@@ -34,7 +34,7 @@ public class FriendsController {
      * R
      * send a friend resquest using the mail a the friend
      */
-    public Response newFriendRequest(@PathParam("token") String token, @PathParam("mail") String mail) throws UnknownHostException {
+    public Response newFriendRequest(@PathParam("token") String token, @PathParam("mail") String mail){
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -62,7 +62,7 @@ public class FriendsController {
 
     @GET
     @Path("whereAreYou/{token}/{mail}")
-    public boolean whereAreYou(@PathParam("token")String token,@PathParam("mail")String mail)throws UnknownHostException{
+    public boolean whereAreYou(@PathParam("token")String token,@PathParam("mail")String mail){
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
@@ -83,7 +83,7 @@ public class FriendsController {
      * R
      * When user clic on accept the invitation
      */
-    public void acceptNotification(@PathParam("token")String token) throws UnknownHostException {
+    public void acceptNotification(@PathParam("token")String token){
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
@@ -117,7 +117,7 @@ public class FriendsController {
 
     @PUT
     @Path("/updateLIA/{token}/{mail}")
-    public void updateLastInArea(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+    public void updateLastInArea(@PathParam("token")String token,@PathParam("mail")String mail){
         MorphiaService morphiaService = new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
@@ -155,7 +155,7 @@ public class FriendsController {
      *R
      * when a user delete e friend, delete himself from the friend list too
      */
-    public String suppFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+    public String suppFriend(@PathParam("token")String token,@PathParam("mail")String mail){
         MorphiaService morphiaService = new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 
@@ -204,7 +204,7 @@ public class FriendsController {
      * A
      * return a json with positions of friends & distance from the user
      */
-    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token) throws UnknownHostException{
+    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token){
 
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -257,14 +257,13 @@ public class FriendsController {
          */
         return friends;
     }
-
-    @PUT
-    @Path("addFriend/{token}/{mail}")
     /**
      * R
      * add the friend using is mail to the user list
      */
-    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
+    @PUT
+    @Path("addFriend/{token}/{mail}")
+    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail){
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 

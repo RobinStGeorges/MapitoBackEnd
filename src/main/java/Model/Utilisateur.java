@@ -127,7 +127,7 @@ public class Utilisateur {
     public ArrayList<Notification> getFriendNotif(){
         ArrayList<Notification> requestpoto = new ArrayList<Notification>();
         for (Notification i : listeNotifications){
-            if( i.getType() == "3"){
+            if( i.getType() == 3){
                 requestpoto.add(i);
             }
         }

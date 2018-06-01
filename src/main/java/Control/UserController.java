@@ -180,6 +180,9 @@ public class UserController {
             case"prenom":
                 result=fetchedUser.getPrenom();
                 break;
+            case"password":
+                result=fetchedUser.getPassword();
+                break;
             default:
                 result="error";
                 break;
@@ -261,7 +264,7 @@ public class UserController {
         ArrayList<Notification> listeNotifs;
         listeNotifs=fetchedUser.getListeNotifications();
 
-        Notification notif = new Notification("addFriend","---"+"unMailrandom@gmail.com"+"--- want to add you ! ");
+        Notification notif = new Notification(3,"---"+"unMailrandom@gmail.com"+"--- want to add you ! ");
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(token,listeNotifs);
         return "200";
@@ -279,7 +282,7 @@ public class UserController {
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-        Notification notif = new Notification("Prox","L'utilisateur "+mail+" "+contenu);
+        Notification notif = new Notification(1,"L'utilisateur "+mail+" "+contenu);
 
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(token,listeNotifs);
@@ -292,7 +295,7 @@ public class UserController {
      * R
      * delete notif with titre   gerer les codes erreurs
      */
-    public String deleteUserNotif(@PathParam("token")String token,@PathParam("titre")String titre) throws UnknownHostException {
+    public String deleteUserNotif(@PathParam("token")String token,@PathParam("titre")int titre) throws UnknownHostException {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
@@ -302,7 +305,7 @@ public class UserController {
         boolean trouve = false;
         while ( iterator.hasNext() ) {
             Notification notif = iterator.next();
-            if(notif.getType().equals(titre)){
+            if(notif.getType()==(titre)){
                 iterator.remove();
                 trouve=true;
             }
@@ -328,7 +331,7 @@ public class UserController {
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
         ArrayList<Friend> listeFriends=fetchedUser.getFriends();
-        boolean tempLITA = false;
+        boolean tempLITA;
         if(listeFriends != null){
             for (Friend friend : listeFriends){
                 Utilisateur poto = userDAO.getByEmail(friend.getMail());
@@ -340,9 +343,9 @@ public class UserController {
                 double lastlat =  poto.getPos().getLastlatitude();
                 double lastlon =  poto.getPos().getLastlongitude();
                 double distance = poto.getPos().distance(fetchedUser.getPos().getLatitude(),fetchedUser.getPos().getLongitude(),latitude,longitude,"K");
-                boolean inTheArea = false;
+                boolean inTheArea;
 
-                if(distance < 0.3){
+                if(distance < 0.5){
                     inTheArea=true;
                     tempLITA=true;
                 }

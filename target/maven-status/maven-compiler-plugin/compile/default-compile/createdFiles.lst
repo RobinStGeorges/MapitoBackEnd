@@ -4,6 +4,7 @@ conf\App.class
 Model\dto\GetFriendDTO.class
 service\UserDaoImpl.class
 service\UserDAO.class
+Model\DateNotification.class
 Testing.class
 Control\NotificationController.class
 Model\Notification.class

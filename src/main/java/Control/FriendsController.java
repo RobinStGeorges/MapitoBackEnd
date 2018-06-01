@@ -4,13 +4,14 @@ import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
 import Model.dto.GetFriendDTO;
+import Model.dto.UserDTO;
+import com.google.gson.Gson;
 import service.MorphiaService;
 import service.UserDAO;
 import service.UserDaoImpl;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -18,36 +19,25 @@ import java.util.Iterator;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/friends/")
 public class FriendsController {
-    /**
-     * A
-     */
-    @GET
-    @Path("/test")
-    @Produces("text/plain")
-    public String test(){
-        return "Hello world";
-    }
+    private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
 
-    @POST
-    @Path("friendRequest/{token}/{mail}")
     /**
      * R
      * send a friend resquest using the mail a the friend
      */
-    public Response newFriendRequest(@PathParam("token") String token, @PathParam("mail") String mail){
-
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
-        Utilisateur fetchedUser = userDAO.getByToken(token);
-
-        Utilisateur receivingUser = userDAO.getByEmail(mail);
-
+    @POST
+    @Path("/friendRequest")
+    public Response newFriendRequest(UserDTO userDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
+        Utilisateur receivingUser = userDAO.getByEmail(userDTO.mail);
+        if(fetchedUser == null || receivingUser == null){
+            return Response.status(401).build();
+        }
         ArrayList<Friend> poto = fetchedUser.getFriends();
         Iterator<Friend> iterator = poto.iterator();
         while ( iterator.hasNext() ) {
             Friend user = iterator.next();
-            if (user.getMail().equals(mail)) {
+            if (user.getMail().equals(userDTO.mail)) {
                 return Response.status(400).build();
             }
         }
@@ -61,20 +51,21 @@ public class FriendsController {
     }
 
     @GET
-    @Path("whereAreYou/{token}/{mail}")
-    public boolean whereAreYou(@PathParam("token")String token,@PathParam("mail")String mail){
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        Utilisateur fetchedUser = userDAO.getByToken(token);
+    @Path("/whereAreYou")
+    public String inTheArea(UserDTO userDTO) {
+        Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
+
+        String response = "{\"area\": %s}";
 
         ArrayList<Friend> poto = fetchedUser.getFriends();
         Iterator<Friend> iterator = poto.iterator();
-        while ( iterator.hasNext() ) {
+        while (iterator.hasNext()) {
             Friend user = iterator.next();
-            if (user.getMail().equals(mail)) {
-                return user.isLastInArea();
+            if (user.getMail().equals(userDTO.mail)) {
+                return String.format(response, Boolean.toString(user.isLastInArea()));
             }
-        }return false;
+        }
+        return String.format(response, Boolean.toString(false));
     }
 
     @PUT
@@ -84,9 +75,6 @@ public class FriendsController {
      * When user clic on accept the invitation
      */
     public void acceptNotification(@PathParam("token")String token){
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
         Utilisateur fetchedUser = userDAO.getByToken(token);
 
         ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
@@ -118,9 +106,6 @@ public class FriendsController {
     @PUT
     @Path("/updateLIA/{token}/{mail}")
     public void updateLastInArea(@PathParam("token")String token,@PathParam("mail")String mail){
-        MorphiaService morphiaService = new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
         /*Current user*/
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
@@ -155,11 +140,7 @@ public class FriendsController {
      *R
      * when a user delete e friend, delete himself from the friend list too
      */
-    public String suppFriend(@PathParam("token")String token,@PathParam("mail")String mail){
-        MorphiaService morphiaService = new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
-/*Current user*/
+    public Response suppFriend(@PathParam("token")String token,@PathParam("mail")String mail){
         Utilisateur fetchedUser = userDAO.getByToken(token);
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
 
@@ -191,10 +172,10 @@ public class FriendsController {
         userDAO.updateFriendsByEmail(mail,listeRequestedUserFriends);
         if (!trouve || !trouve2) {
 
-            return "400";
+            return  Response.status(401).build();
         }
         else{
-            return "200";
+            return Response.ok().build();
         }
     }
 
@@ -205,9 +186,6 @@ public class FriendsController {
      * return a json with positions of friends & distance from the user
      */
     public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token){
-
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
         Utilisateur fetchedUser = userDAO.getByToken(token);
 
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
@@ -263,42 +241,26 @@ public class FriendsController {
      */
     @PUT
     @Path("addFriend/{token}/{mail}")
-    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail){
-        MorphiaService morphiaService= new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
+    public Response addFriend(@PathParam("token")String token,@PathParam("mail")String mail){
         Utilisateur fetchedUser = userDAO.getByToken(token);
-
         Utilisateur user2Add = userDAO.getByEmail(mail);
 
-        ArrayList<Friend> AL;
-        AL=fetchedUser.getFriends();
+        ArrayList<Friend> FriendList;
+        FriendList=fetchedUser.getFriends();
 
         Friend newFriend =new Friend(mail,false,false);
 
         if (user2Add != null){
-            Iterator<Friend> iteratorF = AL.iterator();
-            boolean trouve = false;
-            while ( iteratorF.hasNext() ) {
-
-                Friend friend = iteratorF.next();
-
-                if(friend.getMail().equals(mail)){
-
-                    iteratorF.remove();
-                    trouve=true;
-
+            for(Friend poto : FriendList){
+                if(poto.getMail().equals(mail)){
+                    return Response.status(401).build();
                 }
             }
-            AL.add(newFriend);
-            userDAO.updateFriendsByToken(token, AL );
-            return "200";
+            FriendList.add(newFriend);
+            userDAO.updateFriendsByToken(token, FriendList );
+            return Response.ok().build();
         }
-        else{
-            return "400";
-        }
-
-
+        return Response.status(403).build();
     }
 
 

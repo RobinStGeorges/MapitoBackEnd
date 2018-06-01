@@ -31,11 +31,11 @@ public class FriendsController {
             return Response.status(401).build();
         }
         ArrayList<Friend> poto = fetchedUser.getFriends();
-        Iterator<Friend> iterator = poto.iterator();
-        while ( iterator.hasNext() ) {
-            Friend user = iterator.next();
 
-            if (user.getMail().equals(userDTO.mail)) {
+
+        for(Friend sauce : poto){
+            if(sauce.getMail().equals(userDTO.mail) ){
+
                 return Response.status(400).build();
             }
         }

@@ -65,12 +65,13 @@ public class NotificationController {
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
 
         if(fetchedUser.getListeNotifications() == null){
-            System.out.println("null");
         }
         ArrayList<Notification> listeNotifs;
         listeNotifs=fetchedUser.getListeNotifications();
 
+
         Notification notif = new Notification(3,"---"+userDTO.mail+"--- want to add you ! ");
+
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(userDTO.token,listeNotifs);
         return "200";

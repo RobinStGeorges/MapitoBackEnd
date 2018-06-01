@@ -19,12 +19,9 @@ import java.util.Iterator;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/friends/")
 public class FriendsController {
+
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
 
-    /**
-     * R
-     * send a friend resquest using the mail a the friend
-     */
     @POST
     @Path("/friendRequest")
     public Response newFriendRequest(UserDTO userDTO){
@@ -37,17 +34,18 @@ public class FriendsController {
         Iterator<Friend> iterator = poto.iterator();
         while ( iterator.hasNext() ) {
             Friend user = iterator.next();
+
             if (user.getMail().equals(userDTO.mail)) {
                 return Response.status(400).build();
             }
         }
-
         String mailUser= fetchedUser.getMail();
+
         Notification notif = new Notification(3,"---"+mailUser+"--- want to add you ! ");
 
         receivingUser.getListeNotifications().add(notif);
-
         return Response.ok().build();
+
     }
 
     @GET
@@ -111,23 +109,6 @@ public class FriendsController {
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
 
 
-//        Iterator<Friend> iterator = listeFriends.iterator();
-//        boolean trouve = false;
-//        while ( iterator.hasNext() ) {
-//            Friend user = iterator.next();
-//            if(user.getMail().equals(mail)){
-//                trouve=true;
-//                switch(""+user.isInTheArea()){
-//                    case "true":
-//                        user.setLastInArea(true);
-//                        break;
-//                    case "false":
-//                        user.setLastInArea(true);
-//                        break;
-//                }
-//
-//            }
-//        }
 
 
 

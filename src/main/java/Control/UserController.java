@@ -139,6 +139,7 @@ public class UserController {
         return Response.ok(new Gson().toJson(new UpdateUserDTO(token, field, result))).build();
     }
 
+
     /**
           * R
           */
@@ -163,6 +164,7 @@ public class UserController {
 
 
     }
+
     @PUT
     @Path("addFriend/{token}/{mail}")
     /**
@@ -202,7 +204,9 @@ public class UserController {
         } else {
             return "400";
         }
+
     }
+
 
 
 

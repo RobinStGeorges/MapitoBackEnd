@@ -10,25 +10,23 @@ import java.util.UUID;
 
 public class TokenTournament {
 
-    protected  SecureRandom random = new SecureRandom();
-
-    public synchronized String generateToken( String username ) {
-        String suuid = UUID.randomUUID().toString();
-        return suuid;
+    public String generateToken() {
+        return UUID.randomUUID().toString();
     }
-    public int checkToken(String token,Utilisateur user) {
+
+    public int checkToken(String token, Utilisateur user) {
         if(token == user.getToken())
             return 1;
-        else {
-            if(user.getCptWrongtoken()>=10) {
-                return 3;
-            }else {
 
-                    MorphiaService morphiaService = new MorphiaService();
-                    UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-                    userDAO.updateByEmail(user.getMail(),"cptWrongtoken",Integer.toString(user.getCptWrongtoken()+1 ) );
-                    return 2;
-            }
+
+        if(user.getCptWrongtoken()>=10) {
+            return 3;
+
         }
+        MorphiaService morphiaService = new MorphiaService();
+        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
+        userDAO.updateByEmail(user.getMail(),"cptWrongtoken",Integer.toString(user.getCptWrongtoken()+1 ) );
+        return 2;
+
     }
 }

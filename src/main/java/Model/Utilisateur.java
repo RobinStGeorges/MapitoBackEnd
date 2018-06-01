@@ -1,10 +1,13 @@
 package Model;
 
 //import conf.ConnectionMDB;
+import Model.dto.UserDTO;
 import io.jsonwebtoken.Jwt;
 import org.mongodb.morphia.annotations.*;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
+import service.UserDAO;
+
 import java.util.ArrayList;
 @Entity("Utilisateur")
 @Indexes(@Index(fields = { @Field("mail") }, options = @IndexOptions(unique = true)))
@@ -26,6 +29,13 @@ public class Utilisateur {
 
     public Utilisateur(){
 
+    }
+
+    public Utilisateur(UserDTO dto) {
+        this.mail = dto.mail;
+        this.prenom = dto.prenom;
+        this.nom = dto.nom;
+        this.password = dto.password;
     }
 
     //id generé automatiquement par le document?

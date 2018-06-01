@@ -24,12 +24,20 @@ public class DateNotification {
         Calendar cal = Calendar.getInstance();
         String date = sdf.format(cal.getTime());
         String[] tabDate = date.split("-");
+
         this.an = tabDate[0];
         this.mois = tabDate[1];
-        this.jour = tabDate[2];
-        this.heure = tabDate[3];
-        this.minutes = tabDate[4];
-        this.secondes = tabDate[5];
+
+        String hoursP = tabDate[2];
+        String[] deuxieme = hoursP.split(" ");
+        this.jour = deuxieme[0];
+
+        String reste = deuxieme[1];
+        String[] enfin = reste.split(":");
+        this.heure=enfin[0];
+        this.minutes=enfin[1];
+        this.secondes=enfin[2];
+
     }
 
 

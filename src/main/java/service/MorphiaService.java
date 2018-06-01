@@ -18,7 +18,9 @@ public class MorphiaService {
     private Morphia morphia;
     private Datastore datastore;
 
+
     public MorphiaService()  {
+
 
         // we use MongoClient to connect the local host (127.0.0.1)
         // (assuming this is where your mongodb instance is running)

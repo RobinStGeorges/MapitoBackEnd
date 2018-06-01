@@ -3,6 +3,7 @@ package conf;
 
 
 import Control.FriendsController;
+import Control.NotificationController;
 import Control.UserController;
 import conf.exception.RuntimeExceptionMapper;
 import conf.filter.GsonProvider;
@@ -24,6 +25,7 @@ public class App extends Application {
         Set<Object> sets = new HashSet<>(1);
         sets.add(new UserController());
         sets.add(new FriendsController());
+        sets.add(new NotificationController());
         return sets;
     }
 

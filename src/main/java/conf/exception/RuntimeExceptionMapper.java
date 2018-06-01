@@ -12,6 +12,7 @@ public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException>
 
     @Override
     public Response toResponse(RuntimeException e) {
+        e.printStackTrace();
         return Response.status(400).entity(e.getMessage()).type("plain/text").build();
     }
 }

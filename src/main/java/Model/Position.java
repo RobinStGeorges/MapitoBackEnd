@@ -43,10 +43,10 @@ public class Position {
         System.out.println(dist+"KM ");
         return (dist);
     }
-    private static double deg2rad(double deg) {
+    private  double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
-    private static double rad2deg(double rad) {
+    private  double rad2deg(double rad) {
         return (rad * 180 / Math.PI);
     }
 

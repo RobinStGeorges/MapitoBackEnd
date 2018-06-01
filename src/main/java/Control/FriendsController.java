@@ -51,7 +51,7 @@ public class FriendsController {
         }
 
         String mailUser= fetchedUser.getMail();
-        Notification notif = new Notification("addFriend","---"+mailUser+"--- want to add you ! ");
+        Notification notif = new Notification(3,"---"+mailUser+"--- want to add you ! ");
 
         receivingUser.getListeNotifications().add(notif);
 
@@ -90,7 +90,7 @@ public class FriendsController {
 
         for(Notification notif : listeNotification){
             switch (notif.getType()) {
-                case "addFriend":
+                case 3:
                     String body = notif.getMessage();
                     String[] tabBody = body.split("---");
                     String mailAAccepter= tabBody[1];
@@ -102,7 +102,7 @@ public class FriendsController {
                     userRequesting.getFriends().add(fFetched);
                     fetchedUser.getFriends().add(fUR);
 
-                    Notification notification = new Notification("accepted","---"+fetchedUser.getMail()+"--- just accepted your invitation !");
+                    Notification notification = new Notification(2,"---"+fetchedUser.getMail()+"--- just accepted your invitation !");
                     userRequesting.getListeNotifications().add(notification);
                     //sauvegarder utilisateur
                     break;

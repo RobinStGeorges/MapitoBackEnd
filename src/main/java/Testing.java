@@ -30,5 +30,6 @@ public class Testing {
 //        userDAO.updateByEmail("mail.gmail@gmail.com","phoneId","0102030405");
 //        fetchedUser = userDAO.getByEmail("mail.gmail@gmail.com");
 //        System.out.println(fetchedUser.getPhoneId());
+
     }
 }

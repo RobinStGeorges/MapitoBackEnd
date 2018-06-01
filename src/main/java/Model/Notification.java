@@ -1,17 +1,19 @@
 package Model;
 
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.*;
 
 @Entity("Notification")
+@Indexes(@Index(fields = { @Field("ObjectId") }, options = @IndexOptions(unique = true)))
 public class Notification {
+
     @Id
     private ObjectId _id; // always required
-    private String type;
+
+    private int type;
     private String message;
 
-    public Notification(String titre, String contenue) {
+    public Notification(int titre, String contenue) {
         this.type = titre;
         this.message = contenue;
     }
@@ -19,11 +21,11 @@ public class Notification {
     public Notification() {
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

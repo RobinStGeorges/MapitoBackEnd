@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class TokenTournament {
 
-    protected static SecureRandom random = new SecureRandom();
+    protected  SecureRandom random = new SecureRandom();
 
     public synchronized String generateToken( String username ) {
         String suuid = UUID.randomUUID().toString();

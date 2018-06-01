@@ -26,11 +26,11 @@ public class FriendsController {
         return "Hello world";
     }
 
-    @POST
+    @PUT
     @Path("friendRequest/{token}/{mail}")
     /**
      * R
-     * send a friend resquest using the mail a the friend
+     * send a friend resquest using the mail of the friend
      */
     public String newFriendRequest(@PathParam("token") String token,@PathParam("mail") String mail) throws UnknownHostException {
 
@@ -40,21 +40,28 @@ public class FriendsController {
         Utilisateur fetchedUser = userDAO.getByToken(token);
 
         Utilisateur receivingUser = userDAO.getByEmail(mail);
-
+        System.out.println("pouet");
         ArrayList<Friend> poto = fetchedUser.getFriends();
+        System.out.println("pouet2");
         Iterator<Friend> iterator = poto.iterator();
+
         while ( iterator.hasNext() ) {
             Friend user = iterator.next();
             if (user.getMail().equals(mail)) {
+                System.out.println("400");
                 return "400";
+
             }
         }
-
+        System.out.println("pouet3");
         String mailUser= fetchedUser.getMail();
+        System.out.println("pouet3.5");
+
         Notification notif = new Notification(3,"---"+mailUser+"--- want to add you ! ");
 
+        System.out.println("pouet4");
         receivingUser.getListeNotifications().add(notif);
-
+        System.out.println("pouet5");
         return "200";
     }
     @GET

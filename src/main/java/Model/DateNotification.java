@@ -1,5 +1,6 @@
 package Model;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.*;
 
 import java.text.SimpleDateFormat;
@@ -8,6 +9,8 @@ import java.util.Calendar;
 
 @Entity("DateNotification")
 public class DateNotification {
+    @Id
+    private ObjectId _id; // always required
     private String an;
     private String mois;
     private String jour;

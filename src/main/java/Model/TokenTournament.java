@@ -23,12 +23,11 @@ public class TokenTournament {
             if(user.getCptWrongtoken()>=10) {
                 return 3;
             }else {
-                try {
+
                     MorphiaService morphiaService = new MorphiaService();
                     UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
                     userDAO.updateByEmail(user.getMail(),"cptWrongtoken",Integer.toString(user.getCptWrongtoken()+1 ) );
                     return 2;
-                }catch(UnknownHostException e){return 0;}
             }
         }
     }

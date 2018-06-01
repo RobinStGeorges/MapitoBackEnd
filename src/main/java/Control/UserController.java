@@ -195,7 +195,7 @@ public class UserController {
     @Path("addFriend/{token}/{mail}")
     /**
      * R
-     * add the friend using is mail to the user list
+     * add the friend using its mail to the user list
      */
     public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
         MorphiaService morphiaService= new MorphiaService();

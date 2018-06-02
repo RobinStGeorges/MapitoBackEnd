@@ -10,6 +10,8 @@ import service.UserDAO;
 import service.UserDaoImpl;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -113,14 +115,16 @@ public class UserController {
      */
     @GET
     @Path("/field")
-    public Response getUserField (UserDTO userDto) {
-        Utilisateur fetchedUser = userDAO.getByToken(userDto.token);
+    public Response getUserField (@Context HttpHeaders headers){
+        String token = headers.getRequestHeader("Authorization").get(0);
+        String field = headers.getRequestHeader("Authorization").get(1);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
         System.out.println(fetchedUser);
         if (fetchedUser == null) {
             return Response.status(401).build();
         }
         String result;
-        switch (userDto.field)
+        switch (field)
         {
             case"mail":
                 result=fetchedUser.getMail();
@@ -137,7 +141,7 @@ public class UserController {
             default:
                 return Response.status(404).build();
         }
-        return Response.ok(new Gson().toJson(new UpdateUserDTO(userDto.token, userDto.field, result))).build();
+        return Response.ok(new Gson().toJson(new UpdateUserDTO(token, field, result))).build();
     }
 
 
@@ -212,6 +216,16 @@ public class UserController {
         userDAO.updateByEmail(mail,"password",newpassword);
         SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"mapitoLerance@gmail.com");
         return Response.ok().build();
+    }
+    @GET
+    public Response getUser(@Context HttpHeaders headers) {
+        String token = headers.getRequestHeader("Authorization").get(0);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        UserDTO userDTO = new UserDTO();
+        userDTO.mail = fetchedUser.getMail();
+        userDTO.nom = fetchedUser.getNom();
+        userDTO.prenom = fetchedUser.getPrenom();
+        return Response.ok(new Gson().toJson(userDTO)).build();
     }
 
 }

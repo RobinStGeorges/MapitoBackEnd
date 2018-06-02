@@ -39,10 +39,9 @@ public class NotificationController {
 
     @GET
     @Path("/getNotifsNoFriendReques")
-    public ArrayList<Notification> getNotifsNoFriendRequest(TokenDTO tokenDTO) {
-
-
-        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
+    public ArrayList<Notification> getNotifsNoFriendRequest(@Context HttpHeaders headers){
+        String token = headers.getRequestHeader("Authorization").get(0);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
 
         ArrayList<Notification> NotifsNoFriend = fetchedUser.getNotifNoFriend();
 
@@ -53,17 +52,16 @@ public class NotificationController {
      */
     @GET
     @Path("/getNotifications")
-    public ArrayList<Notification> getUserNotification(UserDTO userDTO) throws UnknownHostException {
-
-        Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
-        System.out.println(fetchedUser.getListeNotifications());
+    public ArrayList<Notification> getUserNotification(@Context HttpHeaders headers){
+        String token = headers.getRequestHeader("Authorization").get(0);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
         return fetchedUser.getListeNotifications();
 
     }
 
     @POST
     @Path("/addNotification")
-    public String addUserNotification(UserDTO userDTO) throws UnknownHostException {
+    public String addUserNotification(UserDTO userDTO){
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
 

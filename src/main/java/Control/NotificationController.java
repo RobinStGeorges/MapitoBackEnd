@@ -10,6 +10,8 @@ import service.UserDAO;
 import service.UserDaoImpl;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -23,13 +25,16 @@ public class NotificationController {
 
     @GET@
     Path("/getFriendRequest")
-    public ArrayList<Notification> getFriendRequest(TokenDTO tokenDTO) {
-
-        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
-
-        ArrayList<Notification> listeFriendRequest = fetchedUser.getFriendNotif();
-
-        return listeFriendRequest;
+    public ArrayList<Notification> getFriendRequest(@Context HttpHeaders headers){
+            String token = headers.getRequestHeader("Authorization").get(0);
+            Utilisateur fetchedUser = userDAO.getByToken(token);
+            ArrayList<Notification> friendRequest = new ArrayList<Notification>();
+            for(Notification not : fetchedUser.getListeNotifications()){
+                if(not.getType()==3){
+                    friendRequest.add(not);
+                }
+            }
+        return friendRequest;
     }
 
     @GET

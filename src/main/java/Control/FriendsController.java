@@ -45,7 +45,7 @@ public class FriendsController {
 
         String mailUser= fetchedUser.getMail();
 
-        Notification notif = new Notification(3,"---"+mailUser+"--- want to add you ! ");
+        Notification notif = new Notification(3,"---"+mailUser+"--- want to add you ! ",fetchedUser.getMail());
 
         receivingUser.getListeNotifications().add(notif);
         userDAO.updateNotifsByToken(userDAO.getByEmail(receivingUser.getMail()).getToken(),receivingUser.getListeNotifications());
@@ -117,12 +117,8 @@ public class FriendsController {
     @GET
     @Path("/getFriends")
     public ArrayList<GetFriendDTO> getUserFriends(@Context HttpHeaders headers){
-        System.out.println("pouet");
         String token = headers.getRequestHeader("Authorization").get(0);
-        System.out.println(token);
-
         Utilisateur fetchedUser = userDAO.getByToken(token);
-
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
         ArrayList<Friend> listeFriends=fetchedUser.getFriends();

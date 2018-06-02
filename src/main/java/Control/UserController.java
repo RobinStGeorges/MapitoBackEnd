@@ -16,13 +16,12 @@ import javax.ws.rs.core.Response;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
-
+//UNNNNNN COMMMMMMMMMMMMMMM TOUUUUUTTTT EN HAUUUUUT
 /*TODO faire les codes dans header */
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/users")
 public class UserController {
-
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
 
     /**
@@ -156,7 +155,7 @@ public class UserController {
         }
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-        Notification notif = new Notification(1,"L'utilisateur "+sendNotifDTO.mail+" "+sendNotifDTO.contenu);
+        Notification notif = new Notification(1,"L'utilisateur "+sendNotifDTO.mail+" "+sendNotifDTO.contenu,fetchedUser.getMail());
 
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(sendNotifDTO.token,listeNotifs);

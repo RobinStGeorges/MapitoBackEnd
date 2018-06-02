@@ -33,8 +33,7 @@ public class UserController {
     @Path("/authenticate")
     public Response authenticate(UserDTO dto) {
         Utilisateur userRecup = userDAO.getByEmail(dto.mail);
-
-        if (!userRecup.getPassword().equals(dto.password)) {
+        if (!userRecup.getPassword().equals(dto.password) || !userRecup.getMail().equals(dto.mail) || userRecup == null ){
             return Response.status(403).build();
         }
 

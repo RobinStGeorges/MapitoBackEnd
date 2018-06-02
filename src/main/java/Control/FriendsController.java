@@ -18,7 +18,7 @@ import java.util.Iterator;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/api/friends/")
+@Path("/api/friends")
 public class FriendsController {
 
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
@@ -73,7 +73,7 @@ public class FriendsController {
      * when a user delete e friend, delete himself from the friend list too
      */
     @PUT
-    @Path("deleteFriend")
+    @Path("/deleteFriend")
     public Response suppFriend(UserDTO userDTO){
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
@@ -104,15 +104,15 @@ public class FriendsController {
             return Response.ok().build();
         }
     }
-
-    @GET
-    @Path("/getFriends")
     /**
      * A
      * return a json with positions of friends & distance from the user
      */
-    public ArrayList<GetFriendDTO> getUserFriends(TokenDTO tokenDTO){
-        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
+    @PUT
+    @Path("/getFriends")
+    public ArrayList<GetFriendDTO> getUserFriends(@HeaderParam("token") String token){
+        System.out.println("pouet");
+        Utilisateur fetchedUser = userDAO.getByToken(token);
 
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
@@ -155,7 +155,7 @@ public class FriendsController {
                 friends.add(dtoF);
             }
         }
-        userDAO.updateFriendsByToken(tokenDTO.token,listeFriends);
+        userDAO.updateFriendsByToken(token,listeFriends);
         /**
          * TODO enregistrer inthearea et lastinthearea !!
          */

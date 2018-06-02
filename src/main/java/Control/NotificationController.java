@@ -33,7 +33,7 @@ public class NotificationController {
     }
 
     @GET
-    @Path("/getNotifsNoFriendRequest/{token}")
+    @Path("/getNotifsNoFriendReques")
     public ArrayList<Notification> getNotifsNoFriendRequest(TokenDTO tokenDTO) {
 
 
@@ -43,12 +43,11 @@ public class NotificationController {
 
         return NotifsNoFriend;
     }
-
-    @GET
-    @Path("/getNotifications")
     /**
      * R
      */
+    @GET
+    @Path("/getNotifications")
     public ArrayList<Notification> getUserNotification(UserDTO userDTO) throws UnknownHostException {
 
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
@@ -58,7 +57,7 @@ public class NotificationController {
     }
 
     @POST
-    @Path("/addNotification/")
+    @Path("/addNotification")
     public String addUserNotification(UserDTO userDTO) throws UnknownHostException {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -77,12 +76,10 @@ public class NotificationController {
         userDAO.updateNotifsByToken(userDTO.token,listeNotifs);
         return "200";
     }
+
+
     @PUT
     @Path("acceptNotification/{token}")
-    /**
-     * R
-     * When user clic on accept the invitation
-     */
     public void acceptNotification(TokenDTO tokenDTO){
         Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
 

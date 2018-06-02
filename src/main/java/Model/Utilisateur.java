@@ -36,6 +36,7 @@ public class Utilisateur {
         this.prenom = dto.prenom;
         this.nom = dto.nom;
         this.password = dto.password;
+        this.pos=new Position(0,0);
     }
 
     //id generé automatiquement par le document?
@@ -45,7 +46,7 @@ public class Utilisateur {
         this.cptWrongtoken=0;
         this.nom=nom;
         this.prenom=prenom;
-        this.pos=new Position();
+        this.pos=new Position(0,0);
 //        this.friends.add(new Friend("plopplop",false));
 //        listeNotifications.add(new Notification(0,"testesttest"));
 

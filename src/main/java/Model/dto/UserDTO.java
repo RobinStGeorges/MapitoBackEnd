@@ -7,7 +7,8 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String mail,String password,String nom ,String prenom) {
+    public UserDTO(String token,String mail,String password,String nom ,String prenom) {
+        this.token=token;
         this.mail = mail;
         this.password = password;
         this.nom = nom;

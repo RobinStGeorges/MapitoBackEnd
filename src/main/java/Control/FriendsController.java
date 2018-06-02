@@ -26,7 +26,7 @@ public class FriendsController {
 
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
 
-    @POST
+    @PUT
     @Path("/friendRequest")
     public Response newFriendRequest(UserDTO userDTO){
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
@@ -39,15 +39,16 @@ public class FriendsController {
 
         for(Friend sauce : poto){
             if(sauce.getMail().equals(userDTO.mail) ){
-
-                return Response.status(400).build();
+                return Response.status(403).build();
             }
         }
+
         String mailUser= fetchedUser.getMail();
 
         Notification notif = new Notification(3,"---"+mailUser+"--- want to add you ! ");
 
         receivingUser.getListeNotifications().add(notif);
+        userDAO.updateNotifsByToken(userDAO.getByEmail(receivingUser.getMail()).getToken(),receivingUser.getListeNotifications());
         return Response.ok().build();
 
     }
@@ -85,6 +86,7 @@ public class FriendsController {
             if(poto.getMail().equals(userDTO.mail)){
                 listeFriends.remove(poto);
                 trouve2 = true;
+                break;
             }
         }
         userDAO.updateFriendsByToken(userDTO.token,listeFriends);
@@ -92,9 +94,10 @@ public class FriendsController {
         Utilisateur requestingUser = userDAO.getByEmail(userDTO.mail);
         listeFriends = requestingUser.getFriends();
         for(Friend poto : listeFriends){
-            if(poto.getMail().equals(requestingUser) ){
+            if(poto.getMail().equals(fetchedUser.getMail()) ){
                 listeFriends.remove(poto);
                 trouve1 = true;
+                break;
             }
         }
         userDAO.updateFriendsByEmail(userDTO.mail,listeFriends);
@@ -180,23 +183,18 @@ public class FriendsController {
     public Response addFriend(UserDTO userDTO){
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         Utilisateur friend = userDAO.getByEmail(userDTO.mail);
-
-        ArrayList<Friend> FriendList;
-        FriendList=fetchedUser.getFriends();
-
-        Friend newFriend =new Friend(userDTO.mail,false,false);
-
-        if (friend != null){
-            for(Friend poto : FriendList){
-                if(poto.getMail().equals(userDTO.mail)){
-                    return Response.status(401).build();
-                }
-            }
-            FriendList.add(newFriend);
-            userDAO.updateFriendsByToken(userDTO.token, FriendList );
-            return Response.ok().build();
+        if(friend == null || fetchedUser == null){
+            return Response.status(401).build();
         }
-        return Response.status(403).build();
+        ArrayList<Friend> FriendListUser = fetchedUser.getFriends();
+        ArrayList<Friend> FriendListMail = friend.getFriends();
+        Friend newFriendUser = new Friend(friend.getMail(),false,false);
+        Friend newFriendMail = new Friend(fetchedUser.getMail(),false,false);
+        FriendListMail.add(newFriendMail);
+        FriendListUser.add(newFriendUser);
+        userDAO.updateFriendsByEmail(friend.getMail(),FriendListMail);
+        userDAO.updateFriendsByEmail(fetchedUser.getMail(), FriendListUser );
+        return Response.ok().build();
     }
 
 

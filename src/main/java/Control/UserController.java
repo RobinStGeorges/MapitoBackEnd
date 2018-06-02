@@ -44,8 +44,6 @@ public class UserController {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(UserDTO dto) {
         /*verification si un utilisateur possède dejà ce mail */
         Utilisateur fetchedUser = userDAO.getByEmail(dto.mail);

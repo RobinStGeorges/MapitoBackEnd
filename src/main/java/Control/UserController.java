@@ -69,6 +69,12 @@ public class UserController {
     public Response updateUser(UpdateUserDTO updateUserDTO) {
         Utilisateur fetchedUser = userDAO.getByToken(updateUserDTO.token);
         if (fetchedUser != null) {
+            if(updateUserDTO.field.equals("mail")){
+                if(userDAO.getByEmail(updateUserDTO.field) != null){
+                    return Response.status(403).build();
+                    //cas ou l'email existe deja
+                }
+            }
             userDAO.updateByToken(updateUserDTO.token, updateUserDTO.field, updateUserDTO.value);
             return Response.ok().build();
         }

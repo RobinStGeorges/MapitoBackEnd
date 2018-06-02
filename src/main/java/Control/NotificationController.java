@@ -1,5 +1,6 @@
 package Control;
 
+import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
 import Model.dto.TokenDTO;
@@ -76,4 +77,39 @@ public class NotificationController {
         userDAO.updateNotifsByToken(userDTO.token,listeNotifs);
         return "200";
     }
+    @PUT
+    @Path("acceptNotification/{token}")
+    /**
+     * R
+     * When user clic on accept the invitation
+     */
+    public void acceptNotification(TokenDTO tokenDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
+
+        ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
+
+        for(Notification notif : listeNotification){
+            switch (notif.getType()) {
+                case 3:
+                    String body = notif.getMessage();
+                    String[] tabBody = body.split("---");
+                    String mailAAccepter= tabBody[1];
+
+                    Utilisateur userRequesting = userDAO.getByEmail(mailAAccepter);
+
+                    Friend fFetched = new Friend(fetchedUser.getMail(),false,false);
+                    Friend fUR = new Friend(userRequesting.getMail(),false,false);
+                    userRequesting.getFriends().add(fFetched);
+                    fetchedUser.getFriends().add(fUR);
+
+                    Notification notification = new Notification(2,"---"+fetchedUser.getMail()+"--- just accepted your invitation !");
+                    userRequesting.getListeNotifications().add(notification);
+                    //sauvegarder utilisateur
+                    break;
+            }
+        }
+
+
+    }
+
 }

@@ -67,41 +67,7 @@ public class FriendsController {
         return String.format(response, Boolean.toString(false));
     }
 
-    @PUT
-    @Path("acceptNotification/{token}")
-    /**
-     * R
-     * When user clic on accept the invitation
-     */
-    public void acceptNotification(TokenDTO tokenDTO){
-        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
 
-        ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
-
-        for(Notification notif : listeNotification){
-            switch (notif.getType()) {
-                case 3:
-                    String body = notif.getMessage();
-                    String[] tabBody = body.split("---");
-                    String mailAAccepter= tabBody[1];
-
-                    Utilisateur userRequesting = userDAO.getByEmail(mailAAccepter);
-
-                    Friend fFetched = new Friend(fetchedUser.getMail(),false,false);
-                    Friend fUR = new Friend(userRequesting.getMail(),false,false);
-                    userRequesting.getFriends().add(fFetched);
-                    fetchedUser.getFriends().add(fUR);
-
-                    Notification notification = new Notification(2,"---"+fetchedUser.getMail()+"--- just accepted your invitation !");
-                    userRequesting.getListeNotifications().add(notification);
-                    //sauvegarder utilisateur
-                    break;
-            }
-        }
-
-
-    }
-    
     /**
      *R
      * when a user delete e friend, delete himself from the friend list too
@@ -200,24 +166,24 @@ public class FriendsController {
      * add the friend using is mail to the user list
      */
     @PUT
-    @Path("addFriend/{token}/{mail}")
-    public Response addFriend(@PathParam("token")String token,@PathParam("mail")String mail){
-        Utilisateur fetchedUser = userDAO.getByToken(token);
-        Utilisateur user2Add = userDAO.getByEmail(mail);
+    @Path("/addFriend")
+    public Response addFriend(UserDTO userDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
+        Utilisateur friend = userDAO.getByEmail(userDTO.mail);
 
         ArrayList<Friend> FriendList;
         FriendList=fetchedUser.getFriends();
 
-        Friend newFriend =new Friend(mail,false,false);
+        Friend newFriend =new Friend(userDTO.mail,false,false);
 
-        if (user2Add != null){
+        if (friend != null){
             for(Friend poto : FriendList){
-                if(poto.getMail().equals(mail)){
+                if(poto.getMail().equals(userDTO.mail)){
                     return Response.status(401).build();
                 }
             }
             FriendList.add(newFriend);
-            userDAO.updateFriendsByToken(token, FriendList );
+            userDAO.updateFriendsByToken(userDTO.token, FriendList );
             return Response.ok().build();
         }
         return Response.status(403).build();

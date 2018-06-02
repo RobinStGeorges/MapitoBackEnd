@@ -1,32 +1,3 @@
-<<<<<<< HEAD
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\service\UserDAO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\FriendRequest.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\UpdatePosDTO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Testing.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\UpdateUserDTO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\Notification.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\TokenTournament.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\GetFriendDTO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\Position.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\Friend.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Control\UserController.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\SendNotifDTO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Control\NotificationController.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\service\MorphiaService.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\TokenDTO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\Utilisateur.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\conf\filter\GsonProvider.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Control\FriendsController.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\service\SendMail.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\conf\ConnectionMDB.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\conf\filter\TestEndpoint.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\service\UserService.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\conf\App.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\DateNotification.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\service\UserDaoImpl.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\Model\dto\UserDTO.java
-C:\Users\arthu\Desktop\MapitoBackEnd\src\main\java\conf\exception\RuntimeExceptionMapper.java
-=======
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\TokenDTO.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\Position.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Testing.java
@@ -34,6 +5,7 @@ C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Control\UserCo
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\conf\App.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\conf\ConnectionMDB.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\GetFriendDTO.java
+C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\SendNotifDTO.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\conf\filter\TestEndpoint.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\UpdatePosDTO.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\conf\filter\GsonProvider.java
@@ -52,4 +24,3 @@ C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\service\UserDA
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\UserDTO.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\conf\exception\RuntimeExceptionMapper.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\service\UserService.java
->>>>>>> robin

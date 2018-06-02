@@ -9,12 +9,13 @@ public class Notification {
 
     @Id
     private ObjectId _id; // always required
-
+    private String mail;
     private int type;
     private String message;
     private DateNotification dateNotif;
 
-    public Notification(int titre, String contenue) {
+    public Notification(int titre, String contenue,String mail) {
+        this.mail=mail;
         this.type = titre;
         this.message = contenue;
         this.dateNotif=new DateNotification();

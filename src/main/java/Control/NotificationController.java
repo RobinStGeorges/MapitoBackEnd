@@ -70,7 +70,7 @@ public class NotificationController {
         listeNotifs=fetchedUser.getListeNotifications();
 
 
-        Notification notif = new Notification(3,"---"+userDTO.mail+"--- want to add you ! ");
+        Notification notif = new Notification(3,"---"+userDTO.mail+"--- want to add you ! ",fetchedUser.getMail());
 
         listeNotifs.add(notif);
         userDAO.updateNotifsByToken(userDTO.token,listeNotifs);
@@ -99,7 +99,7 @@ public class NotificationController {
                     userRequesting.getFriends().add(fFetched);
                     fetchedUser.getFriends().add(fUR);
 
-                    Notification notification = new Notification(2,"---"+fetchedUser.getMail()+"--- just accepted your invitation !");
+                    Notification notification = new Notification(2,"---"+fetchedUser.getMail()+"--- just accepted your invitation !",fetchedUser.getMail());
                     userRequesting.getListeNotifications().add(notification);
                     //sauvegarder utilisateur
                     break;

@@ -4,6 +4,7 @@ import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
 import Model.dto.GetFriendDTO;
+import Model.dto.TokenDTO;
 import Model.dto.UserDTO;
 import com.google.gson.Gson;
 import service.MorphiaService;
@@ -72,8 +73,8 @@ public class FriendsController {
      * R
      * When user clic on accept the invitation
      */
-    public void acceptNotification(@PathParam("token")String token){
-        Utilisateur fetchedUser = userDAO.getByToken(token);
+    public void acceptNotification(TokenDTO tokenDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
 
         ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
 
@@ -100,58 +101,36 @@ public class FriendsController {
 
 
     }
-
-    @PUT
-    @Path("/updateLIA/{token}/{mail}")
-    public void updateLastInArea(@PathParam("token")String token,@PathParam("mail")String mail){
-        /*Current user*/
-        Utilisateur fetchedUser = userDAO.getByToken(token);
-        ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-
-
-
-
-
-
-    }
-
-    @PUT
-    @Path("deleteFriend/{token}/{mail}")
+    
     /**
      *R
      * when a user delete e friend, delete himself from the friend list too
      */
-    public Response suppFriend(@PathParam("token")String token,@PathParam("mail")String mail){
-        Utilisateur fetchedUser = userDAO.getByToken(token);
+    @PUT
+    @Path("deleteFriend")
+    public Response suppFriend(UserDTO userDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-
-        Iterator<Friend> iterator = listeFriends.iterator();
-        boolean trouve2 = false;
-        while ( iterator.hasNext() ) {
-            Friend user = iterator.next();
-            if(user.getMail().equals(mail)){
-                iterator.remove();
-                System.out.println("2");
-                trouve2=true;
+        boolean trouve1=false,trouve2=false;
+        for(Friend poto : listeFriends){
+            if(poto.getMail().equals(userDTO.mail)){
+                listeFriends.remove(poto);
+                trouve2 = true;
             }
         }
-        userDAO.updateFriendsByToken(token,listeFriends);
-        System.out.println("3");//last seen
-        /*deleted user*/
-        Utilisateur requestingUser = userDAO.getByEmail(mail);
-        ArrayList<Friend> listeRequestedUserFriends = requestingUser.getFriends();
-        Iterator<Friend> iterator2 = listeRequestedUserFriends.iterator();
-        boolean trouve = false;
-        while ( iterator2.hasNext() ) {
-            Friend user = iterator2.next();
-            if(user.getMail().equals(fetchedUser.getMail())){
-                iterator2.remove();
-                trouve=true;
+        userDAO.updateFriendsByToken(userDTO.token,listeFriends);
+
+        Utilisateur requestingUser = userDAO.getByEmail(userDTO.mail);
+        listeFriends = requestingUser.getFriends();
+        for(Friend poto : listeFriends){
+            if(poto.getMail().equals(requestingUser) ){
+                listeFriends.remove(poto);
+                trouve1 = true;
             }
         }
+        userDAO.updateFriendsByEmail(userDTO.mail,listeFriends);
 
-        userDAO.updateFriendsByEmail(mail,listeRequestedUserFriends);
-        if (!trouve || !trouve2) {
+        if (!trouve1 || !trouve2) {
 
             return  Response.status(401).build();
         }
@@ -161,13 +140,13 @@ public class FriendsController {
     }
 
     @GET
-    @Path("/getFriends/{token}")
+    @Path("/getFriends")
     /**
      * A
      * return a json with positions of friends & distance from the user
      */
-    public ArrayList<GetFriendDTO> getUserFriends(@PathParam("token") String token){
-        Utilisateur fetchedUser = userDAO.getByToken(token);
+    public ArrayList<GetFriendDTO> getUserFriends(TokenDTO tokenDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
 
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
@@ -210,7 +189,7 @@ public class FriendsController {
                 friends.add(dtoF);
             }
         }
-        userDAO.updateFriendsByToken(token,listeFriends);
+        userDAO.updateFriendsByToken(tokenDTO.token,listeFriends);
         /**
          * TODO enregistrer inthearea et lastinthearea !!
          */

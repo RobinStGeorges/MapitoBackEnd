@@ -1,5 +1,6 @@
 package Control;
 
+import Model.Friend;
 import Model.Notification;
 import Model.Utilisateur;
 import Model.dto.TokenDTO;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/api/notification")
+@Path("/api/notifications")
 public class NotificationController {
 
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
@@ -32,7 +33,7 @@ public class NotificationController {
     }
 
     @GET
-    @Path("/getNotifsNoFriendRequest/{token}")
+    @Path("/getNotifsNoFriendReques")
     public ArrayList<Notification> getNotifsNoFriendRequest(TokenDTO tokenDTO) {
 
 
@@ -42,12 +43,11 @@ public class NotificationController {
 
         return NotifsNoFriend;
     }
-
-    @GET
-    @Path("/getNotifications")
     /**
      * R
      */
+    @GET
+    @Path("/getNotifications")
     public ArrayList<Notification> getUserNotification(UserDTO userDTO) throws UnknownHostException {
 
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
@@ -57,7 +57,7 @@ public class NotificationController {
     }
 
     @POST
-    @Path("/addNotification/")
+    @Path("/addNotification")
     public String addUserNotification(UserDTO userDTO) throws UnknownHostException {
         MorphiaService morphiaService= new MorphiaService();
         UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
@@ -76,4 +76,37 @@ public class NotificationController {
         userDAO.updateNotifsByToken(userDTO.token,listeNotifs);
         return "200";
     }
+
+
+    @PUT
+    @Path("acceptNotification/{token}")
+    public void acceptNotification(TokenDTO tokenDTO){
+        Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
+
+        ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
+
+        for(Notification notif : listeNotification){
+            switch (notif.getType()) {
+                case 3:
+                    String body = notif.getMessage();
+                    String[] tabBody = body.split("---");
+                    String mailAAccepter= tabBody[1];
+
+                    Utilisateur userRequesting = userDAO.getByEmail(mailAAccepter);
+
+                    Friend fFetched = new Friend(fetchedUser.getMail(),false,false);
+                    Friend fUR = new Friend(userRequesting.getMail(),false,false);
+                    userRequesting.getFriends().add(fFetched);
+                    fetchedUser.getFriends().add(fUR);
+
+                    Notification notification = new Notification(2,"---"+fetchedUser.getMail()+"--- just accepted your invitation !");
+                    userRequesting.getListeNotifications().add(notification);
+                    //sauvegarder utilisateur
+                    break;
+            }
+        }
+
+
+    }
+
 }

@@ -33,8 +33,7 @@ public class UserController {
     @Path("/authenticate")
     public Response authenticate(UserDTO dto) {
         Utilisateur userRecup = userDAO.getByEmail(dto.mail);
-
-        if (!userRecup.getPassword().equals(dto.password)) {
+        if (!userRecup.getPassword().equals(dto.password) || !userRecup.getMail().equals(dto.mail) || userRecup == null ){
             return Response.status(403).build();
         }
 
@@ -45,15 +44,12 @@ public class UserController {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response create(UserDTO dto) {
         /*verification si un utilisateur possède dejà ce mail */
         Utilisateur fetchedUser = userDAO.getByEmail(dto.mail);
         if (fetchedUser != null){
             return Response.status(403).build();
         }
-
         Utilisateur user = new Utilisateur(dto);
         userDAO.save(user);
         return Response.ok().build();
@@ -70,6 +66,12 @@ public class UserController {
     public Response updateUser(UpdateUserDTO updateUserDTO) {
         Utilisateur fetchedUser = userDAO.getByToken(updateUserDTO.token);
         if (fetchedUser != null) {
+            if(updateUserDTO.field.equals("mail")){
+                if(userDAO.getByEmail(updateUserDTO.field) != null){
+                    return Response.status(403).build();
+                    //cas ou l'email existe deja
+                }
+            }
             userDAO.updateByToken(updateUserDTO.token, updateUserDTO.field, updateUserDTO.value);
             return Response.ok().build();
         }
@@ -114,15 +116,13 @@ public class UserController {
     @Path("/field")
     public Response getUserField (UserDTO userDto) {
         Utilisateur fetchedUser = userDAO.getByToken(userDto.token);
+        System.out.println(fetchedUser);
         if (fetchedUser == null) {
             return Response.status(401).build();
         }
         String result;
         switch (userDto.field)
         {
-            case "token":
-                result=fetchedUser.getToken();
-                break;
             case"mail":
                 result=fetchedUser.getMail();
                 break;
@@ -140,78 +140,6 @@ public class UserController {
         }
         return Response.ok(new Gson().toJson(new UpdateUserDTO(userDto.token, userDto.field, result))).build();
     }
-
-
-    /**
-          * R
-          */
-    @POST
-    @Path("/new/{mail}/{mdp}/{nom}/{prenom}")
-    public int newUser(@PathParam("mail") String mail, @PathParam("mdp") String mdp, @PathParam("nom") String nom,@PathParam("prenom") String prenom ) throws UnknownHostException {
-        MorphiaService morphiaService;
-        UserDAO userDAO;
-
-        morphiaService = new MorphiaService();
-        userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-        /*verification si un utilisateur possède dejà ce mail */
-        Utilisateur fetchedUser = userDAO.getByEmail(mail);
-        if (fetchedUser != null){
-            return 500;
-        }
-
-        Utilisateur user = new Utilisateur(mail,mdp,nom,prenom);
-        userDAO.save(user);
-        return 200;
-        /*TODO gerer les code erreurs400   */
-
-
-    }
-
-    @PUT
-    @Path("addFriend/{token}/{mail}")
-    /**
-     * R
-     * add the friend using its mail to the user list
-     */
-    public String addFriend(@PathParam("token")String token,@PathParam("mail")String mail) throws UnknownHostException {
-        MorphiaService morphiaService = new MorphiaService();
-        UserDAO userDAO = new UserDaoImpl(Utilisateur.class, morphiaService.getDatastore());
-
-        Utilisateur fetchedUser = userDAO.getByToken(token);
-
-        Utilisateur user2Add = userDAO.getByEmail(mail);
-
-        ArrayList<Friend> AL;
-        AL = fetchedUser.getFriends();
-
-        Friend newFriend = new Friend(mail, false, false);
-
-        if (user2Add != null) {
-            Iterator<Friend> iteratorF = AL.iterator();
-            boolean trouve = false;
-            while (iteratorF.hasNext()) {
-
-                Friend friend = iteratorF.next();
-
-                if (friend.getMail().equals(mail)) {
-
-                    iteratorF.remove();
-                    trouve = true;
-
-                }
-            }
-            AL.add(newFriend);
-            userDAO.updateFriendsByToken(token, AL);
-            return "200";
-        } else {
-            return "400";
-        }
-
-    }
-
-
-
-
 
 
 
@@ -246,8 +174,6 @@ public class UserController {
             return Response.status(401).build();
         }
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
-        Iterator<Notification> iterator = listeNotifs.iterator();
-
         for(Notification not : listeNotifs){
             if(not.getType()==(titre)){
                 listeNotifs.remove(not);
@@ -261,8 +187,8 @@ public class UserController {
 
 
     @PUT
-    @Path("deleteUser/{token}")
-    public Response deleteUser(TokenDTO tokenDto) throws UnknownHostException {
+    @Path("/deleteUser")
+    public Response deleteUser(TokenDTO tokenDto){
         Utilisateur fetchedUser = userDAO.getByToken(tokenDto.token);
         if(fetchedUser == null){
             return Response.status(401).build();
@@ -273,7 +199,7 @@ public class UserController {
 
     @PUT
     @Path("/resetUserMdp/{mail}")
-    public Response resetmdp(@PathParam("mail") String mail)throws UnknownHostException{
+    public Response resetmdp(@PathParam("mail") String mail){
         Utilisateur fetchedUser = userDAO.getByEmail(mail);
         if(fetchedUser == null){
             return Response.status(401).build();

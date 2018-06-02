@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/api/notification")
+@Path("/api/notifications")
 public class NotificationController {
 
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());

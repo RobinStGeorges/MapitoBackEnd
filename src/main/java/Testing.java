@@ -16,7 +16,12 @@ import java.util.ArrayList;
 
 public class Testing {
     public static void main(String[] args) throws UnknownHostException {
-        SendMail.sendMessage("test","essais number 1","mapitolerance@gmail.com","mapitolerance@gmail.com");
+        SendMail.sendMessage(
+                "test",
+                "essais number 1",
+                "mapitolerance@gmail.com",
+                "mapitolerance@gmail.com"
+        );
 //         MorphiaService morphiaService;
 //         UserDAO userDAO;
 //

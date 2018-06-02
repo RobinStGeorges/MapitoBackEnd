@@ -7,10 +7,13 @@ import Model.dto.GetFriendDTO;
 import Model.dto.TokenDTO;
 import Model.dto.UserDTO;
 import com.google.gson.Gson;
+import org.jboss.resteasy.util.HttpServletRequestDelegate;
 import service.MorphiaService;
 import service.UserDAO;
 import service.UserDaoImpl;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -108,19 +111,24 @@ public class FriendsController {
      * A
      * return a json with positions of friends & distance from the user
      */
-    @PUT
+    @GET
     @Path("/getFriends")
-    public ArrayList<GetFriendDTO> getUserFriends(@HeaderParam("token") String token){
+    public ArrayList<GetFriendDTO> getUserFriends(@Context HttpHeaders headers){
         System.out.println("pouet");
+        String token = headers.getRequestHeader("Authorization").get(0);
+        System.out.println(token);
+
         Utilisateur fetchedUser = userDAO.getByToken(token);
 
         ArrayList<GetFriendDTO> friends = new ArrayList<>();//ok
 
         ArrayList<Friend> listeFriends=fetchedUser.getFriends();
+        System.out.println(listeFriends.get(0).getMail());
         boolean tempLITA;
         if(listeFriends != null){
             for (Friend friend : listeFriends){
                 Utilisateur poto = userDAO.getByEmail(friend.getMail());
+                System.out.println(poto.getMail());
                 double distance = poto.getPos().distance(
                         fetchedUser.getPos().getLatitude(),
                         fetchedUser.getPos().getLongitude(),
@@ -128,6 +136,8 @@ public class FriendsController {
                         poto.getPos().getLongitude(),
                         "K"
                 );
+                System.out.println("distance");
+                System.out.println(distance);
                 boolean inTheArea;
                 if(distance < 0.5){
                     inTheArea=true;

@@ -84,9 +84,9 @@ public class FriendsController {
     @PUT
     @Path("/deleteFriend")
     public Response suppFriend(UserDTO userDTO){
+        boolean trouve1=false,trouve2=false;
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-        boolean trouve1=false,trouve2=false;
         for(Friend poto : listeFriends){
             if(poto.getMail().equals(userDTO.mail)){
                 listeFriends.remove(poto);
@@ -95,7 +95,6 @@ public class FriendsController {
             }
         }
         userDAO.updateFriendsByToken(userDTO.token,listeFriends);
-
         Utilisateur requestingUser = userDAO.getByEmail(userDTO.mail);
         listeFriends = requestingUser.getFriends();
         for(Friend poto : listeFriends){
@@ -106,13 +105,13 @@ public class FriendsController {
             }
         }
         userDAO.updateFriendsByEmail(userDTO.mail,listeFriends);
-
         if (!trouve1 || !trouve2) {
-
-            return  Response.status(401).build();
+            return  Response.status(404).entity("Vous n'avez pas cet ami dans votre liste d'ami").build();
         }
         else{
-            return Response.ok().build();
+            return Response.ok().entity("Vous avez bien supprimé "+
+                    userDTO.mail +
+                    " de votre liste d'amis ").build();
         }
     }
     /**
@@ -191,10 +190,12 @@ public class FriendsController {
         Utilisateur friend = userDAO.getByEmail(userDTO.mail);
 
         if(friend == null || fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(403).entity("L'ami n'existe pas ." +
+                    " Veuillez contacter un administrateur si le problème persiste.").build();
         }
         if(fetchedUser.getMail().equals(friend.getMail())){
-            return Response.status(401).build();
+            return Response.status(403).entity("vous ne pouvez pas vous ajouter vous même !" +
+                    " Sortez faire de nouvelles rencontre ! ;)").build();
         }
 
         ArrayList<Friend> FriendListUser = fetchedUser.getFriends();
@@ -210,16 +211,20 @@ public class FriendsController {
         userDAO.updateFriendsByEmail(fetchedUser.getMail(), FriendListUser );
 
         ArrayList<Notification> listNotif = fetchedUser.getListeNotifications();
-
+        int acc=0;
         for (Iterator<Notification> iter = listNotif.listIterator(); iter.hasNext(); ) {
             Notification notif = iter.next();
             if (notif.getMessage().equals("---"+friend.getMail()+"--- want to add you ! ")) {
                 iter.remove();
+                acc++;
             }
+        }
+        if (acc == 0){
+            return Response.status(403).entity("Vous n'avez pas reçuc cette notification !").build();
         }
         userDAO.updateNotifsByToken(userDTO.token,listNotif);
 
-        return Response.ok().build();
+        return Response.ok().entity("Vous avez bien ajouté "+userDTO.mail+ " !").build();
     }
 
 

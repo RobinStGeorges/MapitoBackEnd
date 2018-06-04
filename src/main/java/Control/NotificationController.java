@@ -86,10 +86,10 @@ public class NotificationController {
         return "200";
     }
 
-
+//fonction de test à supprimer
     @PUT
     @Path("acceptNotification/{token}")
-    public void acceptNotification(TokenDTO tokenDTO){
+    public Response acceptNotification(TokenDTO tokenDTO){
         Utilisateur fetchedUser = userDAO.getByToken(tokenDTO.token);
 
         ArrayList<Notification> listeNotification = fetchedUser.getListeNotifications();
@@ -114,8 +114,7 @@ public class NotificationController {
                     break;
             }
         }
-
-
+    return Response.ok().entity("vous avez bien envoyé vos demande d'ami !").build();
     }
     @PUT
     @Path("/delete")
@@ -132,10 +131,10 @@ public class NotificationController {
             }
         }
         if(acc==0){
-            return Response.status(404).build();
+            return Response.status(404).entity("la notification n'a pas été trouvé !").build();
         }
         userDAO.updateNotifsByToken(notifDTO.token,listNotifs);
-        return Response.ok().build();
+        return Response.ok().entity("Vous avez refusé la demande d'ami de "+notifDTO.mail).build();
     }
 
 }

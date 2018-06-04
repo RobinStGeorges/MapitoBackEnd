@@ -4,6 +4,7 @@ import Model.*;
 import Model.dto.*;
 
 import com.google.gson.Gson;
+import org.apache.commons.validator.routines.EmailValidator;
 import service.MorphiaService;
 import service.SendMail;
 import service.UserDAO;
@@ -33,12 +34,13 @@ public class UserController {
     public Response authenticate(UserDTO dto) {
         Utilisateur userRecup = userDAO.getByEmail(dto.mail);
         if (!userRecup.getPassword().equals(dto.password) || !userRecup.getMail().equals(dto.mail) || userRecup == null ){
-            return Response.status(403).build();
+            return Response.status(403).entity("Le mail ou le mot de passe ne correspondent pas. Merci de réessayer.").build();
         }
 
         TokenTournament tekken = new TokenTournament();
         String token = tekken.generateToken();
         userDAO.updateByEmail(dto.mail,"token", token);
+
         return Response.ok(new Gson().toJson(new TokenDTO(token))).build();
     }
 
@@ -46,12 +48,18 @@ public class UserController {
     public Response create(UserDTO dto) {
         /*verification si un utilisateur possède dejà ce mail */
         Utilisateur fetchedUser = userDAO.getByEmail(dto.mail);
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        boolean isvalid = emailValidator.isValid(dto.mail);
+        if(!isvalid){
+            return Response.status(403).entity("Le mail reçu n'est pas valide. Merci de vérifier la syntaxe.").build();
+        }
+        //Si le suer existe deja
         if (fetchedUser != null){
-            return Response.status(403).build();
+            return Response.status(403).entity("Un compte utilisant cet email existe déjà. Merci d'utiliser un autre email").build();
         }
         Utilisateur user = new Utilisateur(dto);
         userDAO.save(user);
-        return Response.ok().build();
+        return Response.ok().entity("Bienvenue sur Mapito ! Vous pouvez maintenant vous connecter !").build();
     }
 
 
@@ -66,15 +74,21 @@ public class UserController {
         Utilisateur fetchedUser = userDAO.getByToken(updateUserDTO.token);
         if (fetchedUser != null) {
             if(updateUserDTO.field.equals("mail")){
-                if(userDAO.getByEmail(updateUserDTO.field) != null){
-                    return Response.status(403).build();
-                    //cas ou l'email existe deja
+                if(userDAO.getByEmail(updateUserDTO.value) != null){//cas ou l'email existe deja
+                    return Response.status(403).entity("Ce mail existe déjà !").build();
+                }
+                EmailValidator emailValidator = EmailValidator.getInstance();
+                boolean isvalid = emailValidator.isValid(updateUserDTO.value);
+                if(!isvalid){
+                    return Response.status(403).entity("Le mail reçu n'est pas valide. Merci de vérifier la syntaxe.").build();
                 }
             }
             userDAO.updateByToken(updateUserDTO.token, updateUserDTO.field, updateUserDTO.value);
             return Response.ok().build();
         }
-        return Response.status(401).build();
+        else{
+            return Response.status(403).entity("L'utilisateur n'a pas été trouvé ! ").build();
+        }
     }
 
     /**
@@ -83,10 +97,11 @@ public class UserController {
     @PUT
     @Path("/position")
     public Response updateUserPos(UpdatePosDTO updatePosDTO) {
+        System.out.println("started updating pos");
         Utilisateur fetchedUser = userDAO.getByToken(updatePosDTO.token);
 
         if(fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(403).entity("L'utilisateur n'a pas été trouvé").build();
         }
 
         //last latitude
@@ -100,10 +115,9 @@ public class UserController {
         // new latitude et longitude
         fetchedUser.getPos().setLatitude(updatePosDTO.lat);
         fetchedUser.getPos().setLongitude(updatePosDTO.lon);
-        System.out.println("last");
         //mise a jours du users
         userDAO.updatePosByToken(updatePosDTO.token,fetchedUser.getPos());
-
+        System.out.println("updated succesfuly");
         return Response.ok().build();
 
     }

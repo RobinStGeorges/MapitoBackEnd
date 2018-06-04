@@ -14,9 +14,9 @@ public class Notification {
     private String message;
     private DateNotification dateNotif;
 
-    public Notification(int titre, String contenue,String mail) {
+    public Notification(int type, String contenue,String mail) {
         this.mail=mail;
-        this.type = titre;
+        this.type = type;
         this.message = contenue;
         this.dateNotif=new DateNotification();
     }
@@ -38,5 +38,21 @@ public class Notification {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public DateNotification getDateNotif() {
+        return dateNotif;
+    }
+
+    public void setDateNotif(DateNotification dateNotif) {
+        this.dateNotif = dateNotif;
     }
 }

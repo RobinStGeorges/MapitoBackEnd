@@ -28,8 +28,7 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
     @Override
     public Utilisateur getByEmail(String mail) {
-        Query<Utilisateur> query = createQuery().
-                field("mail").equal(mail);
+        Query<Utilisateur> query = createQuery().field("mail").equal(mail);
 
         return query.get();
     }

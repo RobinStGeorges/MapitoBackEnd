@@ -12,13 +12,13 @@ public class Notification {
     private String mail;
     private int type;
     private String message;
-    private DateNotification dateNotif;
+    private DateNotification date=new DateNotification();
 
     public Notification(int type, String contenue,String mail) {
         this.mail=mail;
         this.type = type;
         this.message = contenue;
-        this.dateNotif=new DateNotification();
+        this.date=new DateNotification();
     }
 
     public Notification() {
@@ -49,10 +49,10 @@ public class Notification {
     }
 
     public DateNotification getDateNotif() {
-        return dateNotif;
+        return date;
     }
 
     public void setDateNotif(DateNotification dateNotif) {
-        this.dateNotif = dateNotif;
+        this.date = dateNotif;
     }
 }

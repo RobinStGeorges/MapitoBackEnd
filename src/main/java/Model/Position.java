@@ -40,7 +40,7 @@ public class Position {
         } else if (unit == "N") {
             dist = dist * 0.8684;
         }
-        System.out.println(dist+"KM ");
+        System.out.println(dist+" KM ");
         return (dist);
     }
     private  double deg2rad(double deg) {

@@ -73,13 +73,13 @@ public class NotificationController {
      */
     @GET
     @Path("/getNotifications")
-    public ArrayList<Notification> getUserNotification(@Context HttpHeaders headers){
+    public Response getUserNotification(@Context HttpHeaders headers){
 
         String token = headers.getRequestHeader("Authorization").get(0);
 
         Utilisateur fetchedUser = userDAO.getByToken(token);
 
-        return fetchedUser.getListeNotifications();
+        return Response.ok(fetchedUser.getListeNotifications()).build();
 
     }
 

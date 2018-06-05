@@ -27,6 +27,7 @@ public class Utilisateur {
     private ArrayList<Notification> listeNotifications = new ArrayList<Notification>(); /*TODO faire les methodes correspondantes */
     private String rgbProfil;
     private String numTel;
+    private ArrayList<Utilisateur> listeTelUsers = new ArrayList<Utilisateur>();
 
     public Utilisateur(){
 

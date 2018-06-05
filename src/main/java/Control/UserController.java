@@ -3,6 +3,8 @@ package Control;
 import Model.*;
 import Model.dto.*;
 import com.google.gson.Gson;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 import service.MorphiaService;
 import service.SendMail;
@@ -132,7 +134,10 @@ public class UserController {
 
         //last latitude
         double last = fetchedUser.getPos().getLatitude();
-        fetchedUser.getPos().setLastlatitude(last);
+        if(last != fetchedUser.getPos().getLastlatitude()){
+            fetchedUser.getPos().setLastlatitude(last);
+        }
+
 
         //last longitude
         last = fetchedUser.getPos().getLongitude();
@@ -209,7 +214,9 @@ public class UserController {
         }
 
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
+
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
+
         Notification notif = new Notification(1,
                 "L'utilisateur "+sendNotifDTO.mail+" "+sendNotifDTO.contenu,fetchedUser.getMail());
 
@@ -309,24 +316,24 @@ public class UserController {
 
     /**
      *get users potential friend from users repertory
-     * @param friendTellDTO
+     * @param ligne
      * @return
      */
     @GET
     @Path("/getFriendByNumber")
-    public Response resetmdp(GetFriendsByTelDTO friendTellDTO){
+    public Response getFriendByNumber(@HeaderParam("Authorization") String ligne){
 
-        List<Utilisateur> userList= new ArrayList<>();
+        String[] listeNum = ligne.split(";");
+        List<Friend> userList= new ArrayList<>();
 
-        for (String numero : friendTellDTO.listNumero) {
+        for (String numero : listeNum) {
             Utilisateur user = userDAO.getByNum(numero);
             if (user != null){
-                userList.add(user);
+                Friend friend = new Friend(user.getMail());
+                userList.add(friend);
             }
         }
         return Response.ok(userList)
-                .entity("Voici la liste des utilisateur de votre répertoire" +
-                        "ayant un compte MAPITO !")
                 .build();
     }
 

@@ -171,8 +171,10 @@ public class FriendsController {
                         poto.getPos().getLongitude(),
                         "K"
                 );
+
                 System.out.println("distance ");
                 System.out.println(distance);
+
                 boolean inTheArea;
                 if(distance < 0.5){
                     inTheArea=true;
@@ -194,6 +196,7 @@ public class FriendsController {
                         poto.getPos().getLastlatitude(),
                         poto.getPos().getLastlongitude()
                 );
+
                 friend.setLastInArea(tempLITA);
                 friend.setInTheArea(inTheArea);
 

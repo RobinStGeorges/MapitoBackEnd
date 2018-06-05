@@ -24,6 +24,10 @@ public class Friend {
     public Friend() {
     }
 
+    public Friend(String mail){
+        this.mail=mail;
+    }
+
     public String getMail() {
         return mail;
     }

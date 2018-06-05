@@ -26,9 +26,15 @@ public class FriendsController {
 
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
 
+    /**
+     * send a friend request
+     * @param userDTO
+     * @return
+     */
     @PUT
     @Path("/friendRequest")
     public Response newFriendRequest(UserDTO userDTO){
+
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         Utilisateur receivingUser = userDAO.getByEmail(userDTO.mail);
 
@@ -52,15 +58,24 @@ public class FriendsController {
                 fetchedUser.getMail());
 
         receivingUser.getListeNotifications().add(notif);
+
         userDAO.updateNotifsByToken(userDAO.getByEmail(receivingUser.getMail()).getToken(),
                 receivingUser.getListeNotifications());
+
         return Response.ok().entity("La demande d'ami/e a bien été envoyé !").build();
 
     }
 
+    /**
+     * well I don't have a clue what the fuck this function 's used for
+     * shall we delete it? ̿' ̿'\̵͇̿̿\з=(◕_◕)=ε/̵͇̿̿/'̿'̿ ̿
+     * @param userDTO
+     * @return
+     */
     @GET
     @Path("/whereAreYou")
     public String inTheArea(UserDTO userDTO) {
+
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
 
         String response = "{\"area\": %s}";
@@ -73,19 +88,24 @@ public class FriendsController {
                 return String.format(response, Boolean.toString(user.isLastInArea()));
             }
         }
+
         return String.format(response, Boolean.toString(false));
     }
 
 
     /**
-     *R
-     * when a user delete e friend, delete himself from the friend list too
+     * delete a friend from both one's list and the friend's list
+     * @param userDTO
+     * @return
      */
     @PUT
     @Path("/deleteFriend")
     public Response suppFriend(UserDTO userDTO){
+
         boolean trouve1=false,trouve2=false;
+
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
+
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
         for(Friend poto : listeFriends){
             if(poto.getMail().equals(userDTO.mail)){
@@ -94,7 +114,9 @@ public class FriendsController {
                 break;
             }
         }
+
         userDAO.updateFriendsByToken(userDTO.token,listeFriends);
+
         Utilisateur requestingUser = userDAO.getByEmail(userDTO.mail);
         listeFriends = requestingUser.getFriends();
         for(Friend poto : listeFriends){
@@ -104,7 +126,9 @@ public class FriendsController {
                 break;
             }
         }
+
         userDAO.updateFriendsByEmail(userDTO.mail,listeFriends);
+
         if (!trouve1 || !trouve2) {
             return  Response.status(404).entity("Vous n'avez pas cet ami dans votre liste d'ami").build();
         }
@@ -114,9 +138,12 @@ public class FriendsController {
                     " de votre liste d'amis ").build();
         }
     }
+
+
     /**
-     * A
-     * return a json with positions of friends & distance from the user
+     *return liste of user's friend with distances
+     * @param headers
+     * @return
      */
     @GET
     @Path("/getFriends")
@@ -132,8 +159,11 @@ public class FriendsController {
 
         if(listeFriends != null){
             for (Friend friend : listeFriends){
+
                 Utilisateur poto = userDAO.getByEmail(friend.getMail());
-                System.out.println(poto.getMail());
+
+                System.out.println(poto.getMail());//debug
+
                 double distance = poto.getPos().distance(
                         fetchedUser.getPos().getLatitude(),
                         fetchedUser.getPos().getLongitude(),
@@ -141,7 +171,7 @@ public class FriendsController {
                         poto.getPos().getLongitude(),
                         "K"
                 );
-                System.out.println("distance");
+                System.out.println("distance ");
                 System.out.println(distance);
                 boolean inTheArea;
                 if(distance < 0.5){
@@ -175,6 +205,7 @@ public class FriendsController {
                     .entity("Vous n'avez pas encore d'ami ! Pensez à faire de nouvelles rencontres ;) !")
                     .build();
         }
+
         userDAO.updateFriendsByToken(token,listeFriends);
 
         return Response.ok(friends).build();

@@ -3,6 +3,7 @@ service\UserDAO.class
 Testing.class
 Model\Notification.class
 service\SendMail.class
+Model\dto\GetFriendsByTelDTO.class
 Model\dto\UpdateNotificationsDTO.class
 conf\filter\GsonProvider.class
 service\MorphiaService.class

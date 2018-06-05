@@ -11,6 +11,7 @@ C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\Upda
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\conf\filter\GsonProvider.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\Utilisateur.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\service\SendMail.java
+C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\GetFriendsByTelDTO.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\dto\UpdateUserDTO.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Control\NotificationController.java
 C:\Users\kIRETA\Desktop\mapitobackEnd\MapitoBackEnd\src\main\java\Model\Friend.java

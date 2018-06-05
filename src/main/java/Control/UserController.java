@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Produces(MediaType.APPLICATION_JSON)
@@ -304,6 +305,29 @@ public class UserController {
         
         return Response.ok().entity("Votre mot de passe a bien été mis à jour. Pensez" +
                 " à vérifier votre boite de messagerie !").build();
+    }
+
+    /**
+     *get users potential friend from users repertory
+     * @param friendTellDTO
+     * @return
+     */
+    @GET
+    @Path("/getFriendByNumber")
+    public Response resetmdp(GetFriendsByTelDTO friendTellDTO){
+
+        List<Utilisateur> userList= new ArrayList<>();
+
+        for (String numero : friendTellDTO.listNumero) {
+            Utilisateur user = userDAO.getByNum(numero);
+            if (user != null){
+                userList.add(user);
+            }
+        }
+        return Response.ok(userList)
+                .entity("Voici la liste des utilisateur de votre répertoire" +
+                        "ayant un compte MAPITO !")
+                .build();
     }
 
 }

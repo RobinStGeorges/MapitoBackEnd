@@ -108,4 +108,12 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
         return query.get();
     }
 
+    @Override
+    public Utilisateur getByNum(String num) {
+        Query<Utilisateur> query = createQuery().
+                field("numTel").equal(num);
+
+        return query.get();
+    }
+
 }

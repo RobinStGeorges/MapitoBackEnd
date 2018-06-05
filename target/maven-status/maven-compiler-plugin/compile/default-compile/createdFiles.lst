@@ -5,6 +5,7 @@ Model\Notification.class
 service\SendMail.class
 Model\dto\GetFriendsByTelDTO.class
 Model\dto\UpdateNotificationsDTO.class
+Model\dto\NotifDTO.class
 conf\filter\GsonProvider.class
 service\MorphiaService.class
 Model\dto\TokenDTO.class

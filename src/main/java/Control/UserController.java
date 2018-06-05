@@ -11,6 +11,8 @@ import service.SendMail;
 import service.UserDAO;
 import service.UserDaoImpl;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -163,10 +165,11 @@ public class UserController {
      */
     @GET
     @Path("/field")
-    public Response getUserField (UserDTO userDto) {
-        String result;
-
-        Utilisateur fetchedUser = userDAO.getByToken(userDto.token);
+    public Response getUserField (@Context HttpHeaders headers){
+        String token = headers.getRequestHeader("Authorization").get(0);
+        String field = headers.getRequestHeader("Authorization").get(1);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        System.out.println(fetchedUser);
 
         if (fetchedUser == null) {
             return Response.status(404)
@@ -174,8 +177,9 @@ public class UserController {
                     .build();
         }
 
+        String result;
         /* Check what field is asked */
-        switch (userDto.field)
+        switch (field)
         {
             case"mail":
                 result=fetchedUser.getMail();
@@ -194,7 +198,7 @@ public class UserController {
                         .entity("Le champ demandé n'a pas été trouvé ")
                         .build();
         }
-        return Response.ok(new Gson().toJson(new UpdateUserDTO(userDto.token, userDto.field, result))).build();
+        return Response.ok(new Gson().toJson(new UpdateUserDTO(token, field, result))).build();
     }
 
 
@@ -346,6 +350,21 @@ public class UserController {
 
         return Response.ok(userList)
                 .build();
+    }
+    @GET
+    public Response getUser(@Context HttpHeaders headers) {
+        String token = headers.getRequestHeader("Authorization").get(0);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+        UserDTO userDTO = new UserDTO();
+        userDTO.mail = fetchedUser.getMail();
+        userDTO.nom = fetchedUser.getNom();
+        userDTO.prenom = fetchedUser.getPrenom();
+        return Response.ok(new Gson().toJson(userDTO)).build();
+    }
+    @GET
+    @Path("/test")
+    public void testget(@HeaderParam("test") String test){
+        System.out.println(test);
     }
 
 }

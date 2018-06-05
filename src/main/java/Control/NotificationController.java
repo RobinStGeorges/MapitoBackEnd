@@ -75,6 +75,7 @@ public class NotificationController {
     @Path("/getNotifications")
     public Response getUserNotification(@Context HttpHeaders headers){
 
+
         String token = headers.getRequestHeader("Authorization").get(0);
 
         Utilisateur fetchedUser = userDAO.getByToken(token);
@@ -91,6 +92,7 @@ public class NotificationController {
      */
     @POST
     @Path("/addNotification")
+
     public Response addUserNotification(UserDTO userDTO) throws UnknownHostException {
 
         ArrayList<Notification> listeNotifs;

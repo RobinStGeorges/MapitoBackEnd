@@ -34,7 +34,6 @@ public class FriendsController {
     @PUT
     @Path("/friendRequest")
     public Response newFriendRequest(UserDTO userDTO){
-
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         Utilisateur receivingUser = userDAO.getByEmail(userDTO.mail);
 
@@ -51,6 +50,12 @@ public class FriendsController {
                 return Response.status(403).entity("Vous avez déjà ajouté cet ami !").build();
             }
         }
+        ArrayList<Notification> listNotif  = receivingUser.getNotifNoFriend();
+        for (Notification notif : listNotif) {
+            if (notif.getMessage().equals("---"+fetchedUser.getMail()+"--- want to add you ! ")) {
+                return Response.status(403).entity("vous avez déja fait une demande a cet ami, en attente de réponse").build();
+            }
+        }
 
         String mailUser= fetchedUser.getMail();
 
@@ -65,33 +70,6 @@ public class FriendsController {
         return Response.ok().entity("La demande d'ami/e a bien été envoyé !").build();
 
     }
-
-    /**
-     * well I don't have a clue what the fuck this function 's used for
-     * shall we delete it? ̿' ̿'\̵͇̿̿\з=(◕_◕)=ε/̵͇̿̿/'̿'̿ ̿
-     * @param userDTO
-     * @return
-     */
-    @GET
-    @Path("/whereAreYou")
-    public String inTheArea(UserDTO userDTO) {
-
-        Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
-
-        String response = "{\"area\": %s}";
-
-        ArrayList<Friend> poto = fetchedUser.getFriends();
-        Iterator<Friend> iterator = poto.iterator();
-        while (iterator.hasNext()) {
-            Friend user = iterator.next();
-            if (user.getMail().equals(userDTO.mail)) {
-                return String.format(response, Boolean.toString(user.isLastInArea()));
-            }
-        }
-
-        return String.format(response, Boolean.toString(false));
-    }
-
 
     /**
      * delete a friend from both one's list and the friend's list
@@ -208,7 +186,6 @@ public class FriendsController {
                     .entity("Vous n'avez pas encore d'ami ! Pensez à faire de nouvelles rencontres ;) !")
                     .build();
         }
-
         userDAO.updateFriendsByToken(token,listeFriends);
 
         return Response.ok(friends).build();
@@ -220,6 +197,7 @@ public class FriendsController {
     @PUT
     @Path("/addFriend")
     public Response addFriend(UserDTO userDTO){
+        System.out.println("testation");
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         Utilisateur friend = userDAO.getByEmail(userDTO.mail);
 
@@ -245,21 +223,14 @@ public class FriendsController {
         userDAO.updateFriendsByEmail(fetchedUser.getMail(), FriendListUser );
 
         ArrayList<Notification> listNotif = fetchedUser.getListeNotifications();
-        int acc=0;
-        for (Iterator<Notification> iter = listNotif.listIterator(); iter.hasNext(); ) {
-            Notification notif = iter.next();
+        for (Notification notif : listNotif) {
             if (notif.getMessage().equals("---"+friend.getMail()+"--- want to add you ! ")) {
-                iter.remove();
-                acc++;
+                listNotif.remove(notif);
+                userDAO.updateNotifsByToken(userDTO.token,listNotif);
+                System.out.println("testation del friend");
+                return Response.ok().entity("Vous avez bien ajouté "+userDTO.mail+ " !").build();
             }
         }
-        if (acc == 0){
-            return Response.status(403).entity("Vous n'avez pas reçuc cette notification !").build();
-        }
-        userDAO.updateNotifsByToken(userDTO.token,listNotif);
-
-        return Response.ok().entity("Vous avez bien ajouté "+userDTO.mail+ " !").build();
+        return Response.status(403).entity("Vous n'avez pas reçu cette notification !").build();
     }
-
-
 }

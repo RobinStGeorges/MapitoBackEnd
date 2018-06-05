@@ -324,15 +324,26 @@ public class UserController {
     public Response getFriendByNumber(@HeaderParam("Authorization") String ligne){
 
         String[] listeNum = ligne.split(";");
-        List<Friend> userList= new ArrayList<>();
+        List<GetFriendDTO> userList= new ArrayList<>();
 
         for (String numero : listeNum) {
             Utilisateur user = userDAO.getByNum(numero);
             if (user != null){
                 Friend friend = new Friend(user.getMail());
-                userList.add(friend);
+                GetFriendDTO dtoF = new GetFriendDTO(
+                        friend.getMail(),
+                        user.getPrenom(),
+                        false,
+                        false,
+                        user.getPos().getLatitude(),
+                        user.getPos().getLongitude(),
+                        user.getPos().getLastlatitude(),
+                        user.getPos().getLastlongitude()
+                );
+                userList.add(dtoF);
             }
         }
+
         return Response.ok(userList)
                 .build();
     }

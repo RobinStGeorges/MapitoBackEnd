@@ -34,7 +34,6 @@ public class FriendsController {
     @PUT
     @Path("/friendRequest")
     public Response newFriendRequest(UserDTO userDTO){
-
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         Utilisateur receivingUser = userDAO.getByEmail(userDTO.mail);
 
@@ -49,6 +48,12 @@ public class FriendsController {
         for(Friend sauce : poto){
             if(sauce.getMail().equals(userDTO.mail) ){
                 return Response.status(403).entity("Vous avez déjà ajouté cet ami !").build();
+            }
+        }
+        ArrayList<Notification> listNotif  = receivingUser.getNotifNoFriend();
+        for (Notification notif : listNotif) {
+            if (notif.getMessage().equals("---"+fetchedUser.getMail()+"--- want to add you ! ")) {
+                return Response.status(403).entity("vous avez déja fait une demande a cet ami, en attente de réponse").build();
             }
         }
 
@@ -217,6 +222,7 @@ public class FriendsController {
     @PUT
     @Path("/addFriend")
     public Response addFriend(UserDTO userDTO){
+        System.out.println("testation");
         Utilisateur fetchedUser = userDAO.getByToken(userDTO.token);
         Utilisateur friend = userDAO.getByEmail(userDTO.mail);
 
@@ -242,21 +248,14 @@ public class FriendsController {
         userDAO.updateFriendsByEmail(fetchedUser.getMail(), FriendListUser );
 
         ArrayList<Notification> listNotif = fetchedUser.getListeNotifications();
-        int acc=0;
-        for (Iterator<Notification> iter = listNotif.listIterator(); iter.hasNext(); ) {
-            Notification notif = iter.next();
+        for (Notification notif : listNotif) {
             if (notif.getMessage().equals("---"+friend.getMail()+"--- want to add you ! ")) {
-                iter.remove();
-                acc++;
+                listNotif.remove(notif);
+                userDAO.updateNotifsByToken(userDTO.token,listNotif);
+                System.out.println("testation del friend");
+                return Response.ok().entity("Vous avez bien ajouté "+userDTO.mail+ " !").build();
             }
         }
-        if (acc == 0){
-            return Response.status(403).entity("Vous n'avez pas reçuc cette notification !").build();
-        }
-        userDAO.updateNotifsByToken(userDTO.token,listNotif);
-
-        return Response.ok().entity("Vous avez bien ajouté "+userDTO.mail+ " !").build();
+        return Response.status(403).entity("Vous n'avez pas reçuc cette notification !").build();
     }
-
-
 }

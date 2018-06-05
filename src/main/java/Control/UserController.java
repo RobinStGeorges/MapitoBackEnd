@@ -11,6 +11,8 @@ import service.SendMail;
 import service.UserDAO;
 import service.UserDaoImpl;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -107,6 +109,16 @@ public class UserController {
                 boolean isvalid = emailValidator.isValid(updateUserDTO.value);
                 if(!isvalid){
                     return Response.status(403).entity("Le mail reçu n'est pas valide. Merci de vérifier la syntaxe.").build();
+                }
+            }
+            if(updateUserDTO.field.equals("rgbProfil")){
+                if(updateUserDTO.value.length()!=6){
+                    return Response.status(403).entity("Votre code doit etre composé de 6 caractère chiffre/lettre").build();
+                }
+                else{
+                    userDAO.updateByToken(updateUserDTO.token, updateUserDTO.field, "#"+(updateUserDTO.value).toUpperCase());
+
+                    return Response.ok().entity("Vous avez bien mis à jour vos données !").build();
                 }
             }
 
@@ -338,7 +350,8 @@ public class UserController {
                         user.getPos().getLatitude(),
                         user.getPos().getLongitude(),
                         user.getPos().getLastlatitude(),
-                        user.getPos().getLastlongitude()
+                        user.getPos().getLastlongitude(),
+                        user.getRgbProfil()
                 );
                 userList.add(dtoF);
             }
@@ -346,6 +359,26 @@ public class UserController {
 
         return Response.ok(userList)
                 .build();
+    }
+
+    @GET
+    @Path("")
+    public Response getUser(@HeaderParam("Authorization")String token) {
+        System.out.println("token "+token);
+        Utilisateur fetchedUser = userDAO.getByToken(token);
+
+
+        if(fetchedUser == null){
+            return Response.status(404).build();
+        }
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.nom = fetchedUser.getNom();
+        userDTO.prenom = fetchedUser.getPrenom();
+        userDTO.mail = fetchedUser.getMail();
+        userDTO.rgbProfil=fetchedUser.getRgbProfil();
+
+        return Response.ok(new Gson().toJson(userDTO)).build();
     }
 
 }

@@ -9,8 +9,11 @@ public class GetFriendDTO {
     private double lastlongitude;
     private boolean inTheArea;
     private boolean lastInTheArea;
+    private String rgbProfil;
 
-    public GetFriendDTO(String mail,String prenom,boolean inTheArea,boolean lastInTheArea, double latitude, double longitude, double lastlatitude, double lastlongitude) {
+    public GetFriendDTO(String mail,String prenom,boolean inTheArea,boolean lastInTheArea,
+                        double latitude, double longitude, double lastlatitude,
+                        double lastlongitude, String rgbProfil) {
         this.mail = mail;
         this.prenom = prenom;
         this.latitude = latitude;
@@ -19,6 +22,7 @@ public class GetFriendDTO {
         this.lastlongitude = lastlongitude;
         this.inTheArea=inTheArea;
         this.lastInTheArea=lastInTheArea;
+        this.rgbProfil=rgbProfil;
 
     }
 

@@ -194,7 +194,8 @@ public class FriendsController {
                         poto.getPos().getLatitude(),
                         poto.getPos().getLongitude(),
                         poto.getPos().getLastlatitude(),
-                        poto.getPos().getLastlongitude()
+                        poto.getPos().getLastlongitude(),
+                        poto.getRgbProfil()
                 );
 
                 friend.setLastInArea(tempLITA);

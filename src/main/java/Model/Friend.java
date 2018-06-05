@@ -13,11 +13,20 @@ public class Friend {
     private String mail;
     private boolean lastInArea = false;
     private boolean inTheArea = false;
+    private String rgbProfil;
 
     public Friend(String mail, boolean inTheArea,boolean lastInArea) {
         this.mail = mail;
         this.inTheArea = inTheArea;
         this.lastInArea = lastInArea;
+
+    }
+
+    public Friend(String mail, boolean inTheArea,boolean lastInArea,String rgbProfil) {
+        this.mail = mail;
+        this.inTheArea = inTheArea;
+        this.lastInArea = lastInArea;
+        this.rgbProfil=rgbProfil;
 
     }
 

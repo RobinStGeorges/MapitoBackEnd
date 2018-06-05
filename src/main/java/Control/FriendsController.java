@@ -228,8 +228,6 @@ public class FriendsController {
                 return Response.ok().entity("Vous avez bien ajouté "+userDTO.mail+ " !").build();
             }
         }
-            return Response.status(403).entity("Vous n'avez pas reçuc cette notification !").build();
+        return Response.status(403).entity("Vous n'avez pas reçu cette notification !").build();
     }
-
-
 }

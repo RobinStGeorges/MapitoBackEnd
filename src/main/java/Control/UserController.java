@@ -2,24 +2,21 @@ package Control;
 
 import Model.*;
 import Model.dto.*;
-
 import com.google.gson.Gson;
+import org.apache.commons.validator.routines.EmailValidator;
 import service.MorphiaService;
 import service.SendMail;
 import service.UserDAO;
 import service.UserDaoImpl;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
-//UNNNNNN COMMMMMMMMMMMMMMM TOUUUUUTTTT EN HAUUUUUT
-/*TODO faire les codes dans header */
+import java.util.List;
+
+
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/api/users")
@@ -27,68 +24,112 @@ public class UserController {
     private final UserDAO userDAO = new UserDaoImpl(Utilisateur.class, new MorphiaService().getDatastore());
 
     /**
-     * R
-     * HeaderAuthentification
+     * Authenticate the user using mail and password
+     * @param dto
+     * @return
      */
     @PUT
     @Path("/authenticate")
     public Response authenticate(UserDTO dto) {
+
         Utilisateur userRecup = userDAO.getByEmail(dto.mail);
-        if (!userRecup.getPassword().equals(dto.password) || !userRecup.getMail().equals(dto.mail) || userRecup == null ){
-            return Response.status(403).build();
+
+        if( userRecup == null ){
+            return Response.status(404).
+                    entity("L'utilisateur n'a pas été trouvé. Merci de ré-essayer.").
+                    build();
+        }
+        if (!userRecup.getPassword().equals(dto.password) || !userRecup.getMail().equals(dto.mail) ){
+            return Response.status(403)
+                    .entity("Le mail ou le mot de passe ne correspondent pas. Merci de réessayer.")
+                    .build();
         }
 
+        /* gives the connected user a new token */
         TokenTournament tekken = new TokenTournament();
         String token = tekken.generateToken();
         userDAO.updateByEmail(dto.mail,"token", token);
+
         return Response.ok(new Gson().toJson(new TokenDTO(token))).build();
     }
 
+    /**
+     * Create a new user
+     * @param dto
+     * @return
+     */
     @POST
     public Response create(UserDTO dto) {
-        /*verification si un utilisateur possède dejà ce mail */
+
         Utilisateur fetchedUser = userDAO.getByEmail(dto.mail);
-        if (fetchedUser != null){
-            return Response.status(403).build();
+
+        /* Check if email is well constructed */
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        boolean isvalid = emailValidator.isValid(dto.mail);
+        if(!isvalid){
+            return Response.status(403).entity("Le mail reçu n'est pas valide. Merci de vérifier la syntaxe.").build();
         }
+
+        if (fetchedUser != null){
+            return Response.status(403).entity("Un compte utilisant cet email existe déjà. Merci d'utiliser un autre email").build();
+        }
+
         Utilisateur user = new Utilisateur(dto);
         userDAO.save(user);
-        return Response.ok().build();
+
+        return Response.ok().entity("Bienvenue sur Mapito ! Vous pouvez maintenant vous connecter !").build();
     }
 
 
-    /*TODO generer methode qui reçoit email, creer un mdp, le set dans le user puis envois email + mdp a l'email */
-
     /**
-     * R
-     * refaire avec token field value
+     * Update the provided field with the provided value
+     * @param updateUserDTO
+     * @return
      */
     @PUT
     public Response updateUser(UpdateUserDTO updateUserDTO) {
+
         Utilisateur fetchedUser = userDAO.getByToken(updateUserDTO.token);
-        if (fetchedUser != null) {
+
+        if (fetchedUser == null) {
+            return Response.status(403).entity("L'utilisateur n'a pas été trouvé ! ").build();
+        }
+        else{
+
             if(updateUserDTO.field.equals("mail")){
-                if(userDAO.getByEmail(updateUserDTO.field) != null){
-                    return Response.status(403).build();
-                    //cas ou l'email existe deja
+
+                /* the provided mai already exist */
+                if(userDAO.getByEmail(updateUserDTO.value) != null){
+                    return Response.status(403).entity("Ce mail existe déjà !").build();
+                }
+
+                EmailValidator emailValidator = EmailValidator.getInstance();
+                boolean isvalid = emailValidator.isValid(updateUserDTO.value);
+                if(!isvalid){
+                    return Response.status(403).entity("Le mail reçu n'est pas valide. Merci de vérifier la syntaxe.").build();
                 }
             }
+
             userDAO.updateByToken(updateUserDTO.token, updateUserDTO.field, updateUserDTO.value);
-            return Response.ok().build();
+
+            return Response.ok().entity("Vous avez bien mis à jour vos données !").build();
         }
-        return Response.status(401).build();
     }
 
     /**
-     * R
+     * Update user's position
+     * @param updatePosDTO
+     * @return
      */
     @PUT
     @Path("/position")
     public Response updateUserPos(UpdatePosDTO updatePosDTO) {
+        System.out.println("started updating pos");//debug console
+
         Utilisateur fetchedUser = userDAO.getByToken(updatePosDTO.token);
 
         if(fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(403).entity("L'utilisateur n'a pas été trouvé").build();
         }
 
         //last latitude
@@ -102,16 +143,20 @@ public class UserController {
         // new latitude et longitude
         fetchedUser.getPos().setLatitude(updatePosDTO.lat);
         fetchedUser.getPos().setLongitude(updatePosDTO.lon);
-        System.out.println("last");
-        //mise a jours du users
+
+        //updating with new values
         userDAO.updatePosByToken(updatePosDTO.token,fetchedUser.getPos());
 
-        return Response.ok().build();
+        System.out.println("updated succesfuly");//debug console
+
+        return Response.ok().entity("Position bien mise à jour").build();
 
     }
 
     /**
-     * return the value fro the field requested of the user using token
+     * Return the asked field's value
+     * @param userDto
+     * @return
      */
     @GET
     @Path("/field")
@@ -120,10 +165,15 @@ public class UserController {
         String field = headers.getRequestHeader("Authorization").get(1);
         Utilisateur fetchedUser = userDAO.getByToken(token);
         System.out.println(fetchedUser);
+
         if (fetchedUser == null) {
-            return Response.status(401).build();
+            return Response.status(404)
+                    .entity(" L'utilisateur n'a pas été trouvé ")
+                    .build();
         }
+
         String result;
+        /* Check what field is asked */
         switch (field)
         {
             case"mail":
@@ -139,43 +189,59 @@ public class UserController {
                 result=fetchedUser.getPassword();
                 break;
             default:
-                return Response.status(404).build();
+                return Response.status(404)
+                        .entity("Le champ demandé n'a pas été trouvé ")
+                        .build();
         }
         return Response.ok(new Gson().toJson(new UpdateUserDTO(token, field, result))).build();
     }
 
 
-
     /**
-     * R
-     * gerer les codes erreurs
+     * Send a notif to the user when one of is friend is near (500meters)
+     * @param sendNotifDTO
+     * @return
      */
     @PUT
     @Path("/sendProxNotif")
     public Response sendUserProxNotif(SendNotifDTO sendNotifDTO){
+
         Utilisateur fetchedUser = userDAO.getByToken(sendNotifDTO.token);
+
         if(fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(404).entity(" L'utilisateur n'a pas été trouvé ").build();
         }
+
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
         ArrayList<Friend> listeFriends = fetchedUser.getFriends();
-        Notification notif = new Notification(1,"L'utilisateur "+sendNotifDTO.mail+" "+sendNotifDTO.contenu,fetchedUser.getMail());
+        Notification notif = new Notification(1,
+                "L'utilisateur "+sendNotifDTO.mail+" "+sendNotifDTO.contenu,fetchedUser.getMail());
 
         listeNotifs.add(notif);
+
         userDAO.updateNotifsByToken(sendNotifDTO.token,listeNotifs);
+
         return Response.ok().build();
     }
+
     /**
-     * R
-     * delete notif with titre   gerer les codes erreurs
+     * Delete the selected notification
+     * @param token
+     * @param titre
+     * @return
      */
     @PUT
     @Path("/deleteNotif/{token}/{titre}")
     public Response deleteUserNotif(@PathParam("token")String token,@PathParam("titre")int titre){
+
         Utilisateur fetchedUser = userDAO.getByToken(token);
         if(fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(404)
+                    .entity(" L'utilisateur n'a pas été trouvé ")
+                    .build();
         }
+
+        /* delete from the notification list */
         ArrayList<Notification> listeNotifs = fetchedUser.getListeNotifications();
         for(Notification not : listeNotifs){
             if(not.getType()==(titre)){
@@ -184,38 +250,88 @@ public class UserController {
                 return Response.ok().build();
             }
         }
-        return Response.status(404).build();
+        return Response.status(404).entity(" la notification n'est plus présente ").build();
     }
 
-
-
+    /**
+     * delete the user's account
+     * @param tokenDto
+     * @return
+     */
     @PUT
     @Path("/deleteUser")
     public Response deleteUser(TokenDTO tokenDto){
+
         Utilisateur fetchedUser = userDAO.getByToken(tokenDto.token);
+
         if(fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(404)
+                    .entity(" L'utilisateur n'a pas été trouvé ")
+                    .build();
         }
+
         userDAO.deleteByToken(tokenDto.token);
-        return Response.ok().build();
+
+        return Response.ok().entity(" L'utilisateur a bien été supprimé ").build();
     }
 
+    /**
+     * Reset the user's password and send it through email
+     * @param userDTO
+     * @return
+     */
     @PUT
-    @Path("/resetUserMdp/{mail}")
-    public Response resetmdp(@PathParam("mail") String mail){
-        Utilisateur fetchedUser = userDAO.getByEmail(mail);
+    @Path("/resetUserMdp")
+    public Response resetmdp(UserDTO userDTO){
+
+        Utilisateur fetchedUser = userDAO.getByEmail(userDTO.mail);
+
         if(fetchedUser == null){
-            return Response.status(401).build();
+            return Response.status(404).entity("Utilisateur non trouvé !").build();
         }
 
-        String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n"};
+        String tablounet [] =  {"Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G",
+                "H","J","K","L","Z","X","C","V","B","N","M","1","2","3","4","5","6","7","8",
+                "9","0","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j",
+                "k","l","z","x","c","v","b","n"};
+
         String newpassword = "";
+
+        /* Construc a new random password */
         for(int i=0 ;i < 16 ; i ++){
             newpassword = newpassword + tablounet[(int)(Math.random() * ( tablounet.length ) ) ];
         }
-        userDAO.updateByEmail(mail,"password",newpassword);
-        SendMail.sendMessage("reset password","Voici votre nouveau mot de passe :"+newpassword,fetchedUser.getMail(),"mapitoLerance@gmail.com");
-        return Response.ok().build();
+
+        userDAO.updateByEmail(userDTO.mail,"password",newpassword);
+
+        SendMail.sendMessage("reset password","Voici votre nouveau " +
+                "mot de passe :"+newpassword,fetchedUser.getMail(),"mapitoLerance@gmail.com");
+        
+        return Response.ok().entity("Votre mot de passe a bien été mis à jour. Pensez" +
+                " à vérifier votre boite de messagerie !").build();
+    }
+
+    /**
+     *get users potential friend from users repertory
+     * @param friendTellDTO
+     * @return
+     */
+    @GET
+    @Path("/getFriendByNumber")
+    public Response resetmdp(GetFriendsByTelDTO friendTellDTO){
+
+        List<Utilisateur> userList= new ArrayList<>();
+
+        for (String numero : friendTellDTO.listNumero) {
+            Utilisateur user = userDAO.getByNum(numero);
+            if (user != null){
+                userList.add(user);
+            }
+        }
+        return Response.ok(userList)
+                .entity("Voici la liste des utilisateur de votre répertoire" +
+                        "ayant un compte MAPITO !")
+                .build();
     }
     @GET
     public Response getUser(@Context HttpHeaders headers) {
@@ -226,6 +342,11 @@ public class UserController {
         userDTO.nom = fetchedUser.getNom();
         userDTO.prenom = fetchedUser.getPrenom();
         return Response.ok(new Gson().toJson(userDTO)).build();
+    }
+    @GET
+    @Path("/test")
+    public void testget(@HeaderParam("test") String test){
+        System.out.println(test);
     }
 
 }

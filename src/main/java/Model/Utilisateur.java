@@ -26,6 +26,7 @@ public class Utilisateur {
     private String prenom;
     private ArrayList<Notification> listeNotifications = new ArrayList<Notification>(); /*TODO faire les methodes correspondantes */
     private String rgbProfil;
+    private String numTel;
 
     public Utilisateur(){
 
@@ -153,5 +154,13 @@ public class Utilisateur {
             }
         }
         return requestpoto;
+    }
+
+    public String getNumTel() {
+        return numTel;
+    }
+
+    public void setNumTel(String numTel) {
+        this.numTel = numTel;
     }
 }

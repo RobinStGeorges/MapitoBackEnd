@@ -28,8 +28,7 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
 
     @Override
     public Utilisateur getByEmail(String mail) {
-        Query<Utilisateur> query = createQuery().
-                field("mail").equal(mail);
+        Query<Utilisateur> query = createQuery().field("mail").equal(mail);
 
         return query.get();
     }
@@ -105,6 +104,14 @@ public class UserDaoImpl extends BasicDAO<Utilisateur, ObjectId> implements User
     public Utilisateur getByToken(String token) {
         Query<Utilisateur> query = createQuery().
                 field("token").equal(token);
+
+        return query.get();
+    }
+
+    @Override
+    public Utilisateur getByNum(String num) {
+        Query<Utilisateur> query = createQuery().
+                field("numTel").equal(num);
 
         return query.get();
     }
